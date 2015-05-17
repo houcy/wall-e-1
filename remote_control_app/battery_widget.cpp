@@ -26,7 +26,7 @@
 #define RECT_RADIUS 5.0
 
 #define TEXT_SIZE 14
-#define TEXT_COLOR "#003300"
+#define TEXT_COLOR "#444444"
 
 BatteryWidget::BatteryWidget(QWidget *parent) : QProgressBar(parent),
     backgroundPixmap(QPixmap(BACKGROUND_IMAGE_PATH)),
