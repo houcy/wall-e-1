@@ -1,2 +1,2 @@
 # wall-e
-Robot's remote control application
+Robot's remote control application suite
