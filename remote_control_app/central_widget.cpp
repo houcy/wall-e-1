@@ -100,6 +100,7 @@ void CentralWidget::createAudioPlayer()
 {
     audioPlayer = new Player;
     audioPlayer->showVideoWidget(false);
+    audioPlayer->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     audioPlayer->playFile(AUDIO_STREAM);
 }
 
