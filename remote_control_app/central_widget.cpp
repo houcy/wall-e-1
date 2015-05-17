@@ -58,6 +58,8 @@
 #define CONNECT_IMAGE_CONNECT IMAGES_PATH "connect/connect.svg"
 #define CONNECT_IMAGE_CONNECTING IMAGES_PATH "connect/connecting.svg"
 #define CONNECT_IMAGE_CONNECTED IMAGES_PATH "connect/connected.svg"
+#define CONNECT_BUTTON_WIDTH 120
+#define CONNECT_BUTTON_ICON_SIZE 30
 
 #define SECTION_CONNECT "Connect to robot"
 #define SECTION_CONNECT_STATUS "Connection status"
@@ -131,9 +133,10 @@ QPushButton *CentralWidget::createConnectButton()
     connectButton = new QPushButton;
     connectButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     connectButton->setText(tr("Connect"));
-    connectButton->setMinimumSize(120, 40);
-    connectButton->setMaximumSize(120, 40);
-    connectButton->setIconSize(QSize(30, 30));
+    connectButton->setStyleSheet ("text-align: left;");
+    connectButton->setMinimumWidth(CONNECT_BUTTON_WIDTH);
+    connectButton->setIconSize(QSize(CONNECT_BUTTON_ICON_SIZE,
+        CONNECT_BUTTON_ICON_SIZE));
     connectButton->setIcon(QIcon(CONNECT_IMAGE_CONNECT));
     connect(connectButton, SIGNAL(clicked()), this,
         SLOT(slotClientConnecting()));
