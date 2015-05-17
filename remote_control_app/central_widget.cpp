@@ -55,9 +55,9 @@
 #define HORN_IMAGE_PRESSED HORN_IMAGE_PATH "horn_pressed.svg"
 #define HORN_IMAGE_HOVERED HORN_IMAGE_PATH "horn_hovered.svg"
 
-#define CONNECT_IMAGE_CONNECT IMAGES_PATH "connect/connect.svg"
-#define CONNECT_IMAGE_CONNECTING IMAGES_PATH "connect/connecting.svg"
-#define CONNECT_IMAGE_CONNECTED IMAGES_PATH "connect/connected.svg"
+#define CONNECT_BUTTON_IMAGE_CONNECT IMAGES_PATH "connect/connect.svg"
+#define CONNECT_BUTTON_IMAGE_CONNECTING IMAGES_PATH "connect/connecting.svg"
+#define CONNECT_BUTTON_IMAGE_CONNECTED IMAGES_PATH "connect/connected.svg"
 #define CONNECT_BUTTON_WIDTH 120
 #define CONNECT_BUTTON_ICON_SIZE 30
 
@@ -137,7 +137,7 @@ QPushButton *CentralWidget::createConnectButton()
     connectButton->setMinimumWidth(CONNECT_BUTTON_WIDTH);
     connectButton->setIconSize(QSize(CONNECT_BUTTON_ICON_SIZE,
         CONNECT_BUTTON_ICON_SIZE));
-    connectButton->setIcon(QIcon(CONNECT_IMAGE_CONNECT));
+    connectButton->setIcon(QIcon(CONNECT_BUTTON_IMAGE_CONNECT));
     connect(connectButton, SIGNAL(clicked()), this,
         SLOT(slotClientConnecting()));
     connError = false;
@@ -631,7 +631,7 @@ void CentralWidget::slotClientConnected()
     connectionStatusLabel->setText(tr(connetionStatus[CS_CONNECTED]));
     connectButton->setText(tr("Disconnect"));
     connectButton->setEnabled(true);
-    connectButton->setIcon(QIcon(CONNECT_IMAGE_CONNECTED));
+    connectButton->setIcon(QIcon(CONNECT_BUTTON_IMAGE_CONNECTED));
 
     disconnect(connectButton, SIGNAL(clicked()), this,
         SLOT(slotClientAbortConnect()));
@@ -652,7 +652,7 @@ void CentralWidget::slotClientDisconnected()
         connectionStatusLabel->setText(tr(connetionStatus[CS_DISCONNECTED]));
     connectButton->setText(tr("Connect"));
     connectButton->setEnabled(true);
-    connectButton->setIcon(QIcon(CONNECT_IMAGE_CONNECT));
+    connectButton->setIcon(QIcon(CONNECT_BUTTON_IMAGE_CONNECT));
 
     disconnect(connectButton, SIGNAL(clicked()), this,
         SLOT(slotClientAbortConnect()));
@@ -674,7 +674,7 @@ void CentralWidget::slotClientConnecting()
     connectionStatusLabel->setText(tr(connetionStatus[CS_CONNECTING]));
     connectButton->setText(tr("Abort"));
     connectButton->setEnabled(true);
-    connectButton->setIcon(QIcon(CONNECT_IMAGE_CONNECTING));
+    connectButton->setIcon(QIcon(CONNECT_BUTTON_IMAGE_CONNECTING));
 
     disconnect(connectButton, SIGNAL(clicked()), this,
         SLOT(slotClientConnecting()));
