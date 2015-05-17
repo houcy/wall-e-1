@@ -4,9 +4,12 @@
 #include "options_dialog.h"
 #include <QMenuBar>
 
+#define ICON_NAME ":images/images/main_window/icon.png"
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     setWindowTitle(APPLICATION_NAME);
+    setWindowIcon(QIcon(ICON_NAME));
 
     createMenus();
 

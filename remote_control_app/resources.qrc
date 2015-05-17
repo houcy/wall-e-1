@@ -30,5 +30,6 @@
         <file>images/connect/connect.svg</file>
         <file>images/connect/connected.svg</file>
         <file>images/connect/connecting.svg</file>
+        <file>images/main_window/icon.png</file>
     </qresource>
 </RCC>
