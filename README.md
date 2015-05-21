@@ -8,7 +8,7 @@ Remote control application:
 
 <img src="presentation/wall_e_remote_app.jpg">
 
-Below is reference car robot platform based on AT91SAM9G45-EKES board. The main features are webcamera with video and audio support, 4 motors, battery, battery sensor, ultrasonic sensor, hall sensor, WiFi AP, horn and headlights. The robot has its own touchscreen display for on place diagnostic and configuration. 
+Below is reference car robot platform based on AT91SAM9G45-EKES board. The main features are webcamera with video and audio support, 4 motors, battery, battery sensor, ultrasonic sensor, hall sensor, WiFi AP, horn and headlights. The robot has its own touchscreen display for in place diagnostic and configuration. 
  
 <img src="presentation/at91sam9g45_platform_robot_side.jpg" width="608">
 
@@ -31,7 +31,7 @@ Control application and remote control application can run on the same PC for de
 Kubuntu 14.04, gstreamer 0.10.36 + plugins.
 
 ##Execute applications:
-1. Create ethernet device alias with 192.168.3.1 IP:
+1. Create ethernet device alias with 192.168.3.1 IP:  
 $ sudo ifconfig eth0:0 192.168.3.1 up
 2. Execute desktop build of Control application.
 3. Execute Remote control application and press "Connect" button.
