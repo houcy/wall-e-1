@@ -37,6 +37,17 @@ $ sudo ifconfig eth0:0 192.168.3.1 up
 3. Execute Remote control application and press "Connect" button.
 4. After connection is established connection status is "Connected", video from PC web-camera is shown and audio from PC microphone can be heard in headphones.  
 
+##AT91SAM9G45-EKES car robot platform
 
+1. Download Buildroot 2013.05 or later from http://buildroot.uclibc.org/downloads/ and build root FS using config located in platform/at91sam9g45-ekes/buildroot-2013.05 folder.
+2. Build Linux 2.6.30 with patches provided along with AT91SAM9G45-EKES boad and config located in platform/at91sam9g45-ekes/linux-2.6.30/ folder.
+3. Program board with default AT91SAM9G45-EKES bootloaders, custom kernel and root FS.
+4. Execute ts_calibrate in order to calibrate touchcreen.
+5. Add touchscreen settings export to /etc/profile:  
+export TSLIB_TSDEVICE=/dev/input/event1  
+export TSLIB_TSEVENTTYPE=INPUT  
+export TSLIB_CONFFILE=/etc/ts.conf  
+export TSLIB_CALIBFILE=/etc/pointercal  
+export QWS_MOUSE_PROTO="Tslib:/dev/input/event1"  
 
 
