@@ -3,10 +3,18 @@
 #include <QString>
 
 #define MEDIA_STREAM_PROGRAM "gst-launch"
+
+#ifdef CONFIG_AT91
 #define MEDIA_STREAM_PROGRAM_ARGS "v4l2src device=/dev/video1 ! videoscale !" \
     "video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! jpegenc ! " \
     "multipartmux ! udpsink host=%1 port=%2 osssrc device=/dev/dsp1 ! " \
     "mulawenc ! rtppcmupay ! udpsink host=%3 port=%4"
+#else
+#define MEDIA_STREAM_PROGRAM_ARGS "autovideosrc ! videoscale !" \
+    "video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! jpegenc ! " \
+    "multipartmux ! udpsink host=%1 port=%2 autoaudiosrc ! " \
+    "mulawenc ! rtppcmupay ! udpsink host=%3 port=%4"
+#endif
 
 MediaStream::MediaStream(QObject *parent) : QObject(parent)
 {
