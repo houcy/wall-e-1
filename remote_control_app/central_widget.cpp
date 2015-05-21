@@ -21,13 +21,13 @@
 #include <QSettings>
 #include <QShortcut>
 
-#define VIDEO_STREAM "udp://@:5000"
+#define VIDEO_STREAM "udp://@:5001"
 #define VIDEO_H_RESOLUTION 320
 #define VIDIO_V_RESOLUTION 240
-#define AUDIO_STREAM "rtp://@:5001"
+#define AUDIO_STREAM "rtp://@:5002"
 
 #define SERVER_NAME "192.168.3.1"
-#define SERVER_PORT 5001
+#define SERVER_PORT 5000
 
 #define CMD_SEND_INTERVAL 100
 #define CMD_ACK_TIMEOUT 3000

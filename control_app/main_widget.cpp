@@ -24,10 +24,10 @@
 #include <QSettings>
 #include <QCheckBox>
 
-#define SERVER_PORT 5001
+#define SERVER_PORT 5000
 
-#define VIDEO_STREAM_PORT 5000
-#define AUDIO_STREAM_PORT 5001
+#define VIDEO_STREAM_PORT 5001
+#define AUDIO_STREAM_PORT 5002
 
 #define CAR_START_DELAY 200
 
