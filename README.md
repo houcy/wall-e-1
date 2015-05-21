@@ -2,13 +2,13 @@
 Robot's remote control application suite. 
 
 #Description
-Suite consists of two applications: Control application and Remote control application. Former is designed to control periferal components and sensors of robot. It provides graphical UI and communication with remote side. Last one is used for remote configuration, monitoring and control. Communication between applications is based on TCP protocol. Both applications are built with opensourse version of Qt. Video and audio streams are implemented using gstreamer and VLC packages. 
+Suite consists of two applications: Control application and Remote control application. Former is designed to control periferal components and sensors of robot. It provides graphical UI and communication with remote side. Last one is used for remote configuration, monitoring and control. Communication between applications is based on TCP protocol. Both applications are built with open sourse version of Qt. Video and audio streams are implemented using gstreamer and VLC packages. 
 
 Remote control application:
 
 <img src="presentation/wall_e_remote_app.jpg">
 
-Below is reference car robot platform based on AT91SAM9G45-EKES board. The main features are webcamera with video and audio support, 4 motors, battery, battery sensor, ultrasonic sensor, hall sensor, WiFi AP, horn and headlights. The robot has its own touchscreen display for in place diagnostic and configuration. 
+Below is reference car robot platform based on AT91SAM9G45-EKES board. The main features are web-camera with video and audio support, four motors, battery, battery sensor, ultrasonic sensor, hall sensor, WiFi AP, horn and headlights. The robot has its own touchscreen display for in place diagnostic and configuration. 
  
 <img src="presentation/at91sam9g45_platform_robot_side.jpg" width="608">
 
@@ -35,7 +35,7 @@ Kubuntu 14.04, gstreamer 0.10.36 + plugins.
 $ sudo ifconfig eth0:0 192.168.3.1 up
 2. Execute desktop build of Control application.
 3. Execute Remote control application and press "Connect" button.
-4. After connection is established connection status is "Connected", video from PC webcamera is shown and audio from PC microphone can be heard in headphones.  
+4. After connection is established connection status is "Connected", video from PC web-camera is shown and audio from PC microphone can be heard in headphones.  
 
 
 
