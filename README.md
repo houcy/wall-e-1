@@ -49,5 +49,6 @@ export TSLIB_TSEVENTTYPE=INPUT
 export TSLIB_CONFFILE=/etc/ts.conf  
 export TSLIB_CALIBFILE=/etc/pointercal  
 export QWS_MOUSE_PROTO="Tslib:/dev/input/event1"  
+6. To be continued...
 
 
