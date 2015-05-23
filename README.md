@@ -39,9 +39,15 @@ $ sudo ifconfig eth0:0 192.168.3.1 up
 
 ##AT91SAM9G45-EKES car robot platform
 
-1. Download Buildroot 2013.05 or later from http://buildroot.uclibc.org/downloads/ and build root FS using config located in platform/at91sam9g45-ekes/buildroot-2013.05 folder.
-2. Build Linux 2.6.30 with patches provided along with AT91SAM9G45-EKES boad and config located in platform/at91sam9g45-ekes/linux-2.6.30/ folder.
-3. Linux config file turns on support of PCF8591 8-bit ADC used for battery voltage measurements. In order to use this I2C device add its name and address to I2C devices table and recompile kernel:  
+1. Download Buildroot 2013.05 or later from http://buildroot.uclibc.org.
+2. Copy configuration file and update device table:  
+$ cp platform/at91sam9g45-ekes/buildroot-2013.05/.config &lt;Buildroot folder&gt;/  
+$ cp platform/at91sam9g45-ekes/buildroot-2013.05/system/device_table_dev.txt &lt;Buildroot folder&gt;/system/  
+$ mkdir -p &lt;Buildroot folder&gt;/system/skeleton/dev/snd  
+$ make menuconfig  
+$ make  
+3. Build Linux 2.6.30 with patches provided along with AT91SAM9G45-EKES boad and configuration file located in platform/at91sam9g45-ekes/linux-2.6.30/ folder. Refer to board's manual.
+4. Linux configuration file turns on support of PCF8591 8-bit ADC used for battery voltage measurements. In order to use this I2C device add its name and address to I2C devices table and recompile kernel:  
 arch/arm/mach-at91/board-sam9m10g45ek.c  
 static struct i2c_board_info __initdata ek_i2c_devices[] = {  
 &nbsp;&nbsp;&nbsp;&nbsp;...  
@@ -49,14 +55,14 @@ static struct i2c_board_info __initdata ek_i2c_devices[] = {
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I2C_BOARD_INFO("pcf8591", 0x48),  
 &nbsp;&nbsp;&nbsp;&nbsp;},  
 };
-4. Program board with default AT91SAM9G45-EKES bootloaders, custom kernel and root FS.
-5. Execute ts_calibrate in order to calibrate touchcreen.
-6. Add touchscreen settings export to /etc/profile:  
+5. Program board with default AT91SAM9G45-EKES bootloaders, custom kernel and root FS. Refer to board's manual.
+6. Execute ts_calibrate in order to calibrate touchcreen.
+7. Add touchscreen settings export to /etc/profile:  
 export TSLIB_TSDEVICE=/dev/input/event1  
 export TSLIB_TSEVENTTYPE=INPUT  
 export TSLIB_CONFFILE=/etc/ts.conf  
 export TSLIB_CALIBFILE=/etc/pointercal  
 export QWS_MOUSE_PROTO="Tslib:/dev/input/event1"  
-7. To be continued...
+8. To be continued...
 
 
