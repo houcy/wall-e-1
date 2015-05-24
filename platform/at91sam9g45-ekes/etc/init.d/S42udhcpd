@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# A startup script for udhcpd
+#
+# Usage /etc/init.d/S50udhcpd start|stop|reload|restart
+
+set -e
+
+prog=udhcpd
+exe=/usr/sbin/udhcpd
+DHCPCONF=/etc/udhcpd.conf
+LEASEFILE=/var/lib/misc/udhcpd.leases
+PIDFILE=/var/run/udhcpd.pid
+
+start() {
+	if [ ! -d `dirname $LEASEFILE` ]; then mkdir -p `dirname $LEASEFILE`; fi
+	if [ ! -f $LEASEFILE ]; then touch $LEASEFILE; fi
+	echo -n "Starting $prog: "
+	start-stop-daemon --start -x $exe -p $PIDFILE -- $DHCPCONF
+	echo
+}
+
+stop() {
+	echo -n "Stopping $prog: "
+	start-stop-daemon --stop -x $exe -p $PIDFILE
+	echo
+}
+
+case "$1" in
+start)
+	start
+	;;
+stop)
+	stop
+	;;
+restart)
+	stop
+	start
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
