@@ -101,7 +101,8 @@ sshpass -proot scp platform/at91sam9g45-ekes/etc/hostapd.conf root@192.168.2.200
 sshpass -proot scp platform/at91sam9g45-ekes/etc/init.d/S42udhcpd root@192.168.2.200:/etc/init.d/S42udhcpd  
 sshpass -proot scp platform/at91sam9g45-ekes/etc/init.d/S41hostapd root@192.168.2.200:/etc/init.d/S41hostapd  
 sshpass -proot scp platform/at91sam9g45-ekes/etc/hostapd.conf root@192.168.2.200:/etc/hostapd.conf  
-sshpass -proot scp platform/at91sam9g45-ekes/etc/network/interfaces root@192.168.2.200:/etc/network/interfaces  
+sshpass -proot scp platform/at91sam9g45-ekes/etc/network/interfaces root@192.168.2.200:/etc/network/interfaces
+
 ### To be continued...
 
 
