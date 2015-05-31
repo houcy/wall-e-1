@@ -81,28 +81,30 @@ sshpass -proot scp hall_speed.ko root@192.168.2.200:/home/hall_speed.ko
 
 ### Ultrasonic distance sensor
 -  Build Ultrasonic HC-SR04 driver module from https://github.com/tanzilli/hc-sr04.
--  Copy hcsr04.ko to board:  
+-  Copy hcsr04.ko to the board:  
 sshpass -proot scp hcsr04.ko root@192.168.2.200:/home/hcsr04.ko
 -  Add "null::sysinit:/sbin/insmod /home/hcsr04.ko" to board's /etc/inittab file.
 
 ### WiFi AP
 -  Build TL-WN725N WiFi driver from https://github.com/lwfinger/rtl8188eu:  
 make SUBARCH=arm CROSS_COMPILE=/usr/local/arm-2007q1/bin/arm-none-linux-gnueabi- KVER=2.6.30 KSRC=../../linux-2.6.30  
--  Copy 8188eu.ko to board:  
+-  Copy 8188eu.ko to the board:  
 sshpass -proot scp 8188eu.ko root@192.168.2.200:/home/8188eu.ko
 -  Add "null::sysinit:/sbin/insmod /home/8188eu.ko" to board's /etc/inittab file.
 -  Copy TL-WN725N firmware rtl8188eu-master/rtl8188eufw.bin to linux-2.6.30/firmware/rtlwifi/ folder, rebuild and flash kernel.
 -  Build hostapd from https://github.com/jenssegers/RTL8188-hostapd:  
 make CC=/usr/local/arm-2007q1/bin/arm-none-linux-gnueabi-gcc DESTDIR=/home/bogdan/Development/buildroot-2013.05/output/target
--  Copy hostapd to board:  
+-  Copy hostapd to the board:  
 sshpass -proot scp hostapd root@192.168.2.200:/sbin/hostapd
--  Copy configuration files to board:  
+-  Copy configuration files to the board:  
 sshpass -proot scp platform/at91sam9g45-ekes/etc/hostapd.conf root@192.168.2.200:/etc/udhcpd.conf  
 sshpass -proot scp platform/at91sam9g45-ekes/etc/init.d/S42udhcpd root@192.168.2.200:/etc/init.d/S42udhcpd  
 sshpass -proot scp platform/at91sam9g45-ekes/etc/init.d/S41hostapd root@192.168.2.200:/etc/init.d/S41hostapd  
 sshpass -proot scp platform/at91sam9g45-ekes/etc/hostapd.conf root@192.168.2.200:/etc/hostapd.conf  
 sshpass -proot scp platform/at91sam9g45-ekes/etc/network/interfaces root@192.168.2.200:/etc/network/interfaces
 
-### To be continued...
+### Horn
+- Copy horn sound file to the board:  
+sshpass -proot scp platform/at91sam9g45-ekes/home/horn_signal.wav root@192.168.2.200:/home/horn_signal.wav
 
 
