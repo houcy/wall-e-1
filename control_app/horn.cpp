@@ -2,7 +2,7 @@
 #include "log.h"
 
 #define HORN_PROGRAM "mplayer"
-#define HORN_PROGRAM_ARG "-slave /home/horn_signal.wav"
+#define HORN_PROGRAM_ARG "-loop 0 -af volume=10 -slave /home/horn_signal.wav"
 #define CMD_PLAY "seek 0 2\n"
 #define CMD_PAUSE "pause\n"
 
