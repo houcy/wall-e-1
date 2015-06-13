@@ -113,4 +113,6 @@ The schematic is at platform/at91sam9g45-ekes/schematic/schematic.BMP. The proto
 -  The board needs 12V input voltage, two batteries is not sufficient for stable 5V output.
 -  The BSS138 is low power FET. It is not fit for feeding LEDs directly.
 
+<img src="platform/at91sam9g45-ekes/schematic/schematic.BMP">
+
 
