@@ -107,4 +107,10 @@ sshpass -proot scp platform/at91sam9g45-ekes/etc/network/interfaces root@192.168
 - Copy horn sound file to the board:  
 sshpass -proot scp platform/at91sam9g45-ekes/home/horn_signal.wav root@192.168.2.200:/home/horn_signal.wav
 
+### Schematic
+The schematic is at platform/at91sam9g45-ekes/schematic/schematic.BMP. The prototype v1.0 has got some drawbacks, in particular:
+
+-  The board needs 12V input voltage, two batteries is not sufficient for stable 5V output.
+-  The BSS138 is low power FET. It is not fit for feeding LEDs directly.
+
 
