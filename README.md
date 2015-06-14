@@ -115,4 +115,8 @@ The schematic is at platform/at91sam9g45-ekes/schematic/schematic.BMP. The proto
 
 <img src="platform/at91sam9g45-ekes/schematic/schematic.BMP">
 
+### Design
+The Control application design:  
+<img src="design/control_app_uml.jpg">
+
 
