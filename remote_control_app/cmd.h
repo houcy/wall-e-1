@@ -68,7 +68,7 @@ public:
     };
 
     Cmd();
-    void enqeue(char cmd, char cmdData);
+    void enqeue(char cmd, const QString &cmdData);
     void clear();
     const char *getData() const;
     unsigned int size() const;

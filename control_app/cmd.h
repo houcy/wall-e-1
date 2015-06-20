@@ -9,7 +9,7 @@ class Cmd
     typedef struct
     {
         char cmd;
-        char cmdData;
+        QString cmdData;
     } CmdItem;
     QList< CmdItem > cmdList;
     QByteArray respBuf;
@@ -65,7 +65,7 @@ public:
     };
 
     void parse(QString &data);
-    int get(char &cmd, char &cmdData);
+    int get(char &cmd, QString &cmdData);
     void enqueueResp(char cmdResp, const QString &respData);
     const char *getRespData();
     void clearResp();

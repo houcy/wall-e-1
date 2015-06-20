@@ -337,43 +337,51 @@ void CentralWidget::slotSendCmdToServer()
 
 void CentralWidget::slotCarDirectCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_RUN_DIRECT);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        QString::number(Cmd::CMD_DATA_CAR_MOVE_RUN_DIRECT));
 }
 
 void CentralWidget::slotCarReverseCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_RUN_REVERSE);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        QString::number(Cmd::CMD_DATA_CAR_MOVE_RUN_REVERSE));
 }
 
 void CentralWidget::slotCarLeftCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_TURN_LEFT);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        QString::number(Cmd::CMD_DATA_CAR_MOVE_TURN_LEFT));
 }
 
 void CentralWidget::slotCarRightCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_TURN_RIGHT);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        QString::number(Cmd::CMD_DATA_CAR_MOVE_TURN_RIGHT));
 }
 
 void CentralWidget::slotCarStopCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_STOP);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        QString::number(Cmd::CMD_DATA_CAR_MOVE_STOP));
 }
 
 void CentralWidget::slotHornSignalStart()
 {
-    cmd->enqeue(Cmd::CMD_HORN_SIGNAL, Cmd::CMD_DATA_HORN_SIGNAL_START);
+    cmd->enqeue(Cmd::CMD_HORN_SIGNAL,
+        QString::number(Cmd::CMD_DATA_HORN_SIGNAL_START));
 }
 
 void CentralWidget::slotHornSignalStop()
 {
-    cmd->enqeue(Cmd::CMD_HORN_SIGNAL, Cmd::CMD_DATA_HORN_SIGNAL_STOP);
+    cmd->enqeue(Cmd::CMD_HORN_SIGNAL,
+        QString::number(Cmd::CMD_DATA_HORN_SIGNAL_STOP));
 }
 
 void CentralWidget::slotHeadlightsStageChange(bool on)
 {
-    cmd->enqeue(Cmd::CMD_HEADLIGHTS, on ? Cmd::CMD_DATA_HEADLIGHTS_ON :
-        Cmd::CMD_DATA_HEADLIGHTS_OFF);
+    cmd->enqeue(Cmd::CMD_HEADLIGHTS, QString::number(on ?
+        Cmd::CMD_DATA_HEADLIGHTS_ON :
+        Cmd::CMD_DATA_HEADLIGHTS_OFF));
 }
 
 #ifdef Q_OS_LINUX
@@ -797,7 +805,8 @@ void CentralWidget::saveSettings()
 
 void CentralWidget::sendSettings()
 {
-    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, getTurnMethod());
+    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD,
+        QString::number(getTurnMethod()));
 }
 
 int CentralWidget::getTurnMethod()
@@ -809,7 +818,8 @@ void CentralWidget::setTurnMethod(int turnMethod)
 {
     this->turnMethod = turnMethod;
 
-    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, turnMethod);
+    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD,
+        QString::number(turnMethod));
 
     saveSettings();
 }

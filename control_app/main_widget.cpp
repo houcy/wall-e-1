@@ -199,7 +199,8 @@ QHBoxLayout *MainWidget::createMainLayout()
 
 void MainWidget::slotDataReceived(QString data)
 {
-    char command, commandData;
+    char command;
+    QString commandData;
 
     cmd->parse(data);
 
@@ -209,14 +210,23 @@ void MainWidget::slotDataReceived(QString data)
     sendResponseToClient();
 }
 
-void MainWidget::executeCommand(char cmd, char cmdData)
+void MainWidget::executeCommand(char cmd, const QString& cmdData)
 {
+    bool ok = false;
+    int data = cmdData.toInt(&ok);
+
+    if (!ok)
+    {
+        critical("Command data conversion failed");
+        return;
+    }
+
     switch (cmd)
     {
     case Cmd::CMD_NONE:
         break;
     case Cmd::CMD_CAR_MOVE:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_CAR_MOVE_RUN_FREE:
             car->runFree();
@@ -238,11 +248,11 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong car move command");
-            break;
+            return;
         }
         break;
     case Cmd::CMD_CAR_TURN_METHOD:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_TURN_METHOD_DIRERENTIAL:
             car->setTurnMethod(Car::CAR_TURN_METHOD_DIFFERENTIAL);
@@ -252,12 +262,12 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong car turn method");
-            break;
+            return;
         }
         saveSettings();
         break;
     case Cmd::CMD_HORN_SIGNAL:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_HORN_SIGNAL_START:
             horn->signalStart();
@@ -267,11 +277,11 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong horn signal action");
-            break;
+            return;
         }
         break;
     case Cmd::CMD_HEADLIGHTS:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_HEADLIGHTS_ON:
             headlights->on();
@@ -281,12 +291,12 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong headlights signal action");
-	    break;
+	    return;
         }
         break;
     default:
         critical("Wrong car command");
-        break;
+        return;
     }
 
     cmdTimeoutTimer->start(CMD_TIMEOUT);

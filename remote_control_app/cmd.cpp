@@ -10,7 +10,7 @@ Cmd::Cmd()
     emptyCmd += CMD_END;
 }
 
-void Cmd::enqeue(char cmd, char cmdData)
+void Cmd::enqeue(char cmd, const QString &cmdData)
 {
     cmdBuf += CMD_START;
     cmdBuf += cmd;
