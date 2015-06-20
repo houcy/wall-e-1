@@ -6,7 +6,7 @@ Cmd::Cmd()
 {
     emptyCmd += CMD_START;
     emptyCmd += CMD_NONE;
-    emptyCmd += CMD_DATA_NONE;
+    emptyCmd += QString::number(CMD_DATA_NONE);
     emptyCmd += CMD_END;
 }
 
