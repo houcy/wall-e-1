@@ -794,6 +794,8 @@ void CentralWidget::readSettings()
 
     if (settings.contains(SETTINGS_KEY_TURN_METHOD))
         setTurnMethod(settings.value(SETTINGS_KEY_TURN_METHOD).toInt());
+    else
+        setTurnMethod(Cmd::CMD_DATA_TURN_METHOD_SKID_STEER);
 }
 
 void CentralWidget::saveSettings()
