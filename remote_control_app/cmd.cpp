@@ -7,7 +7,7 @@ Cmd::Cmd()
 {
     emptyCmd += cmdStart;
     emptyCmd += CMD_NONE;
-    emptyCmd += CMD_DATA_NONE;
+    emptyCmd += std::to_string(CMD_DATA_NONE);
     emptyCmd += cmdEnd;
 }
 

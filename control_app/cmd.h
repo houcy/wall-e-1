@@ -20,37 +20,37 @@ public:
     {
         CMD_NONE = '0',
         CMD_CAR_MOVE = '1',
-        CMD_CAR_TURN_METHOD ='2',
+        CMD_CAR_TURN_METHOD = '2',
         CMD_HORN_SIGNAL = '3',
         CMD_HEADLIGHTS = '4'
     };
     enum CmdDataNone
     {
-        CMD_DATA_NONE = '0'
+        CMD_DATA_NONE
     };
     enum CmdCarMoveData
     {
-        CMD_DATA_CAR_MOVE_RUN_FREE = '0',
-        CMD_DATA_CAR_MOVE_RUN_DIRECT = '1',
-        CMD_DATA_CAR_MOVE_RUN_REVERSE = '2',
-        CMD_DATA_CAR_MOVE_TURN_LEFT = '3',
-        CMD_DATA_CAR_MOVE_TURN_RIGHT = '4',
-        CMD_DATA_CAR_MOVE_STOP = '5'
+        CMD_DATA_CAR_MOVE_RUN_FREE,
+        CMD_DATA_CAR_MOVE_RUN_DIRECT,
+        CMD_DATA_CAR_MOVE_RUN_REVERSE,
+        CMD_DATA_CAR_MOVE_TURN_LEFT,
+        CMD_DATA_CAR_MOVE_TURN_RIGHT,
+        CMD_DATA_CAR_MOVE_STOP
     };
     enum CmdDataTurnMethod
     {
-        CMD_DATA_TURN_METHOD_DIRERENTIAL = '0',
-        CMD_DATA_TURN_METHOD_SKID_STEER = '1'
+        CMD_DATA_TURN_METHOD_DIRERENTIAL,
+        CMD_DATA_TURN_METHOD_SKID_STEER
     };
     enum CmdDataHornSignal
     {
-        CMD_DATA_HORN_SIGNAL_START = '0',
-        CMD_DATA_HORN_SIGNAL_STOP = '1'
+        CMD_DATA_HORN_SIGNAL_START,
+        CMD_DATA_HORN_SIGNAL_STOP
     };
     enum CmdDataHeadlights
     {
-        CMD_DATA_HEADLIGHTS_ON = '0',
-        CMD_DATA_HEADLIGHTS_OFF = '1'
+        CMD_DATA_HEADLIGHTS_ON,
+        CMD_DATA_HEADLIGHTS_OFF
     };
     enum CmdRespNumer
     {
