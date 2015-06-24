@@ -54,7 +54,7 @@ class MainWidget : public QWidget
 
     QGroupBox *motorTestCreate(int motor, const QString &groupText);
     QWidget *carTestCreate();
-    void executeCommand(char cmd, char cmdData);
+    void executeCommand(char cmd, const std::string &cmdData);
     QLabel *createPageTitle(const QString &title);
     QWidget *createStatusPage();
     QWidget *createMotorTestPage();
@@ -87,7 +87,7 @@ public:
 signals:
 
 public slots:
-    void slotDataReceived(QString data);
+    void slotDataReceived(const std::string &data);
     void slotMotorTestCmd(int motor, int cmd);
     void slotCarTestFreeRun(bool);
     void slotCarTestDirect(bool);

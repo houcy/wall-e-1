@@ -1,7 +1,6 @@
 #ifndef CMD_H
 #define CMD_H
 
-#include <QString>
 #include <QList>
 
 class Cmd
@@ -9,17 +8,14 @@ class Cmd
     typedef struct
     {
         char cmd;
-        char cmdData;
+        std::string cmdData;
     } CmdItem;
     QList< CmdItem > cmdList;
-    QByteArray respBuf;
+    std::string respBuf;
+    const char cmdStart = ':';
+    const char cmdEnd = ';';
 
 public:
-    enum CmdFormat
-    {
-        CMD_START = ':',
-        CMD_END = '\n'
-    };
     enum CmdNumer
     {
         CMD_NONE = '0',
@@ -64,9 +60,9 @@ public:
         CMD_RESP_SPEED = '3'
     };
 
-    void parse(QString &data);
-    int get(char &cmd, char &cmdData);
-    void enqueueResp(char cmdResp, const QString &respData);
+    void parse(const std::string &data);
+    int get(char &cmd, std::string &cmdData);
+    void enqueueResp(char cmdResp, const std::string &respData);
     const char *getRespData();
     void clearResp();
 };

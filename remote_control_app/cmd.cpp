@@ -1,34 +1,35 @@
 #include "cmd.h"
 #include <QTextStream>
 #include <QDebug>
+#include <sstream>
 
 Cmd::Cmd()
 {
-    emptyCmd += CMD_START;
+    emptyCmd += cmdStart;
     emptyCmd += CMD_NONE;
     emptyCmd += CMD_DATA_NONE;
-    emptyCmd += CMD_END;
+    emptyCmd += cmdEnd;
 }
 
-void Cmd::enqeue(char cmd, char cmdData)
+void Cmd::enqeue(char cmd, const std::string &cmdData)
 {
-    cmdBuf += CMD_START;
+    cmdBuf += cmdStart;
     cmdBuf += cmd;
     cmdBuf += cmdData;
-    cmdBuf += CMD_END;
+    cmdBuf += cmdEnd;
 }
 
 const char *Cmd::getData() const
 {
-    if (cmdBuf.isEmpty())
-        return emptyCmd.constData();
+    if (cmdBuf.empty())
+        return emptyCmd.c_str();
 
-    return cmdBuf.constData();
+    return cmdBuf.c_str();
 }
 
 unsigned int Cmd::size() const
 {
-    if (cmdBuf.isEmpty())
+    if (cmdBuf.empty())
         return emptyCmd.size();
 
     return cmdBuf.size();
@@ -36,52 +37,47 @@ unsigned int Cmd::size() const
 
 void Cmd::clear()
 {
-    if (!cmdBuf.isEmpty())
+    if (!cmdBuf.empty())
         cmdBuf.clear();
 }
 
-void Cmd::parseResp(QString &data)
+void Cmd::parseResp(const std::string &data)
 {
-    char respStart, resp, respEnd;
-    QString respData;
-    QTextStream textStream(&data);
+    char respStart, resp;
+    std::string respData;
+    std::istringstream dataStream(data);
 
-    while (!textStream.atEnd())
+    while (!dataStream.eof())
     {
-        textStream >> respStart;
+        dataStream >> respStart;
 
-        if (respStart != CMD_START)
+        if (respStart != cmdStart)
+        {
+            qDebug() << "Wrong start of response";
             continue;
+        }
 
-        textStream >> resp;
+        dataStream >> resp;
 
         switch (resp)
         {
         case Cmd::CMD_RESP_ACK:
-            break;
         case Cmd::CMD_RESP_DIST_TO_OBSTACLE:
         case Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL:
         case Cmd::CMD_RESP_SPEED:
-            textStream >> respData;
+            std::getline(dataStream, respData, cmdEnd);
             break;
         default:
             qDebug() << "Wrong response";
             return;
         };
 
-        textStream >> respEnd;
-        if (respEnd != CMD_END)
-        {
-            qDebug() << "Wrong end of response";
-            return;
-        }
-
         RespItem respItem = { resp, respData };
         respList.append(respItem);
     }
 }
 
-int Cmd::getResp(char &resp, QString &respData)
+int Cmd::getResp(char &resp, std::string &respData)
 {
     if (!respList.isEmpty())
     {

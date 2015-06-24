@@ -1,8 +1,8 @@
 #include "tcp_server.h"
 #include "log.h"
 #include <QTcpSocket>
-#include <QString>
 #include <QDataStream>
+#include <string>
 
 TcpServer::TcpServer(QObject *parent) : QTcpServer(parent)
 {
@@ -30,7 +30,7 @@ void TcpServer::slotNewConnection()
 
 void TcpServer::slotReadClient()
 {
-    QString packet;
+    char *packet;
     QTcpSocket *clientSocket = (QTcpSocket *)sender();
     QDataStream in(clientSocket);
     in.setVersion(QDataStream::Qt_4_8);
@@ -41,7 +41,9 @@ void TcpServer::slotReadClient()
             break;
 
         in >> packet;
-        emit signalDataReceived(packet);
+        std::string packetStr(packet);
+        delete[] packet;
+        emit signalDataReceived(packetStr);
     }
 }
 
@@ -51,7 +53,7 @@ void TcpServer::sendToClient(const char *data)
     QDataStream out(&arrBlock, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_8);
 
-    out << QString(data);
+    out << data;
 
     clientSocket->write(arrBlock);
 }

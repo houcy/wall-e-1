@@ -23,7 +23,7 @@ public:
     QHostAddress getClientAddr() const;
 
 signals:
-    void signalDataReceived(QString packet);
+    void signalDataReceived(const std::string &packet);
     void connectionStateChanged();
 
 public slots:

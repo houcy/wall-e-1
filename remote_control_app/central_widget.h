@@ -102,7 +102,7 @@ class CentralWidget : public QWidget
     void readSettings();
     void saveSettings();
     void sendSettings();
-    void handleServerResp(char resp, const QString &respData);
+    void handleServerResp(char resp, const std::string &respData);
     void updateDistanceToObstacle(int dist);
     void updateBatteryChargeLevel(int batteryChargeLevelLabel);
     void updateSpeed(int speed);
@@ -132,7 +132,7 @@ public slots:
     void slotClientDisconnecting();
     void slotClientAbortConnect();
     void slotClientConnectionError(const QString &error);
-    void slotClientGetData(QString data);
+    void slotClientGetData(const std::string &data);
     void slotClientCommunicationTimeout();
     void slotKeyRelease();
 };

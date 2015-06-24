@@ -1,90 +1,50 @@
 #include "cmd.h"
 #include "log.h"
-#include <QTextStream>
+#include <sstream>
 
-void Cmd::parse(QString &data)
+void Cmd::parse(const std::string &data)
 {
-    char cmdStart, cmd, cmdData, cmdEnd;
-    QTextStream textStream(&data);
+    char delim, cmd;
+    std::string cmdData;
+    std::istringstream dataStream(data);
 
-    while (!textStream.atEnd())
+    while (!dataStream.eof())
     {
-        textStream >> cmdStart;
+        dataStream >> delim;
 
-        if (cmdStart == CMD_START)
+        if (delim != cmdStart)
         {
-            textStream >> cmd >> cmdData >> cmdEnd;
-
-            if (cmdEnd != CMD_END)
-            {
-                debug("Wrong end of command");
-                return;
-            }
-
-            switch (cmd)
-            {
-            case CMD_NONE:
-                break;
-            case CMD_CAR_MOVE:
-                switch (cmdData)
-                {
-                case CMD_DATA_CAR_MOVE_RUN_FREE:
-                case CMD_DATA_CAR_MOVE_RUN_DIRECT:
-                case CMD_DATA_CAR_MOVE_RUN_REVERSE:
-                case CMD_DATA_CAR_MOVE_TURN_LEFT:
-                case CMD_DATA_CAR_MOVE_TURN_RIGHT:
-                case CMD_DATA_CAR_MOVE_STOP:
-                    break;
-                default:
-                    debug("Wrong car command data");
-                    return;
-                }
-                break;
-            case CMD_CAR_TURN_METHOD:
-                switch (cmdData)
-                {
-                case CMD_DATA_TURN_METHOD_DIRERENTIAL:
-                case CMD_DATA_TURN_METHOD_SKID_STEER:
-                    break;
-                default:
-                    debug("Wrong car command data");
-                    return;
-                }
-                break;
-            case CMD_HORN_SIGNAL:
-                switch (cmdData)
-                {
-                case CMD_DATA_HORN_SIGNAL_START:
-                case CMD_DATA_HORN_SIGNAL_STOP:
-                    break;
-                default:
-                    debug("Wrong horn signal action");
-                    return;
-                }
-                break;
-            case CMD_HEADLIGHTS:
-                switch (cmdData)
-                {
-                case CMD_DATA_HEADLIGHTS_ON:
-                case CMD_DATA_HEADLIGHTS_OFF:
-                    break;
-                default:
-                    debug("Wrong headlights action");
-                    return;
-                }
-                break;
-            default:
-                debug("Wrong car command");
-                return;
-            };
-
-            CmdItem cmdItem = { cmd, cmdData };
-            cmdList.append(cmdItem);
+            debug("Wrong start of command");
+            continue;
         }
+
+        dataStream >> cmd;
+
+        switch (cmd)
+        {
+        case CMD_NONE:
+        case CMD_CAR_MOVE:
+        case CMD_CAR_TURN_METHOD:
+        case CMD_HORN_SIGNAL:
+        case CMD_HEADLIGHTS:
+           std::getline(dataStream, cmdData, cmdEnd);
+           if (dataStream.bad())
+           {
+               debug("Failed to get command's data");
+               continue;
+           }
+           break;
+        default:
+           debug("Wrong car command");
+           continue;
+        };
+
+        CmdItem cmdItem = { cmd, cmdData };
+        cmdList.append(cmdItem);
     }
 }
 
-int Cmd::get(char &cmd, char &cmdData)
+int Cmd::get(char &cmd, std::string &cmdData)
 {
     if (!cmdList.isEmpty())
     {
@@ -98,17 +58,17 @@ int Cmd::get(char &cmd, char &cmdData)
         return -1;
 }
 
-void Cmd::enqueueResp(char resp, const QString &respData)
+void Cmd::enqueueResp(char resp, const std::string &respData)
 {
-    respBuf += CMD_START;
+    respBuf += cmdStart;
     respBuf += resp;
     respBuf += respData;
-    respBuf += CMD_END;
+    respBuf += cmdEnd;
 }
 
 const char *Cmd::getRespData()
 {
-    return respBuf.constData();
+    return respBuf.c_str();
 }
 
 void Cmd::clearResp()

@@ -3,26 +3,22 @@
 
 #include <QByteArray>
 #include <QList>
-#include <QString>
 
 class Cmd
 {
     typedef struct
     {
         char resp;
-        QString respData;
+        std::string respData;
     } RespItem;
 
-    QByteArray cmdBuf;
-    QByteArray emptyCmd;
+    std::string cmdBuf;
+    std::string emptyCmd;
     QList< RespItem > respList;
+    const char cmdStart = ':';
+    const char cmdEnd = ';';
 
 public:
-    enum CmdFormat
-    {
-        CMD_START = ':',
-        CMD_END = '\n'
-    };
     enum CmdNumer
     {
         CMD_NONE = '0',
@@ -68,12 +64,12 @@ public:
     };
 
     Cmd();
-    void enqeue(char cmd, char cmdData);
+    void enqeue(char cmd, const std::string &cmdData);
     void clear();
     const char *getData() const;
     unsigned int size() const;
-    void parseResp(QString &data);
-    int getResp(char &resp, QString &respData);
+    void parseResp(const std::string &data);
+    int getResp(char &resp, std::string &respData);
 };
 
 #endif // CMD_H

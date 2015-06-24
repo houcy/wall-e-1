@@ -93,8 +93,8 @@ void MainWidget::setupServer()
              server->errorString().toLatin1().constData());
         server->close();
     }
-    connect(server, SIGNAL(signalDataReceived(QString)),
-        this, SLOT(slotDataReceived(QString)));
+    connect(server, SIGNAL(signalDataReceived(const std::string &)),
+        this, SLOT(slotDataReceived(const std::string &)));
     connect(server, SIGNAL(connectionStateChanged()), this,
         SLOT(slotUpdateConnection()));
 }
@@ -197,9 +197,10 @@ QHBoxLayout *MainWidget::createMainLayout()
     return hBoxLayout;
 }
 
-void MainWidget::slotDataReceived(QString data)
+void MainWidget::slotDataReceived(const std::string &data)
 {
-    char command, commandData;
+    char command;
+    std::string commandData;
 
     cmd->parse(data);
 
@@ -209,14 +210,31 @@ void MainWidget::slotDataReceived(QString data)
     sendResponseToClient();
 }
 
-void MainWidget::executeCommand(char cmd, char cmdData)
+void MainWidget::executeCommand(char cmd, const std::string &cmdData)
 {
+    int data;
+
+    try
+    {
+        data = std::stoi(cmdData);
+    }
+    catch (std::invalid_argument)
+    {
+        debug("Failed to get command's data");
+        return;
+    }
+    catch (std::out_of_range)
+    {
+        debug("Failed to get command's data");
+        return;
+    }
+
     switch (cmd)
     {
     case Cmd::CMD_NONE:
         break;
     case Cmd::CMD_CAR_MOVE:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_CAR_MOVE_RUN_FREE:
             car->runFree();
@@ -238,11 +256,11 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong car move command");
-            break;
+            return;
         }
         break;
     case Cmd::CMD_CAR_TURN_METHOD:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_TURN_METHOD_DIRERENTIAL:
             car->setTurnMethod(Car::CAR_TURN_METHOD_DIFFERENTIAL);
@@ -252,12 +270,12 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong car turn method");
-            break;
+            return;
         }
         saveSettings();
         break;
     case Cmd::CMD_HORN_SIGNAL:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_HORN_SIGNAL_START:
             horn->signalStart();
@@ -267,11 +285,11 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong horn signal action");
-            break;
+            return;
         }
         break;
     case Cmd::CMD_HEADLIGHTS:
-        switch (cmdData)
+        switch (data)
         {
         case Cmd::CMD_DATA_HEADLIGHTS_ON:
             headlights->on();
@@ -281,12 +299,12 @@ void MainWidget::executeCommand(char cmd, char cmdData)
             break;
         default:
             critical("Wrong headlights signal action");
-	    break;
+	    return;
         }
         break;
     default:
         critical("Wrong car command");
-        break;
+        return;
     }
 
     cmdTimeoutTimer->start(CMD_TIMEOUT);
@@ -622,12 +640,12 @@ void MainWidget::slotUpdateConnection()
 
 void MainWidget::sendResponseToClient()
 {
-    cmd->enqueueResp(Cmd::CMD_RESP_ACK, QString(""));
+    cmd->enqueueResp(Cmd::CMD_RESP_ACK, std::string(""));
     cmd->enqueueResp(Cmd::CMD_RESP_DIST_TO_OBSTACLE,
-        QString::number(distToObstacle));
+        std::to_string(distToObstacle));
     cmd->enqueueResp(Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL,
-        QString::number(batteryChargeLevel));
-    cmd->enqueueResp(Cmd::CMD_RESP_SPEED, QString::number(speed));
+        std::to_string(batteryChargeLevel));
+    cmd->enqueueResp(Cmd::CMD_RESP_SPEED, std::to_string(speed));
 
     server->sendToClient(cmd->getRespData());
 

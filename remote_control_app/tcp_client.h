@@ -25,7 +25,7 @@ public:
 
 signals:
     void signalError(const QString &error);
-    void signalDataReceived(QString data);
+    void signalDataReceived(const std::string &data);
 
 public slots:
     void slotReadReady();

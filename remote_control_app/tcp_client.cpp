@@ -22,7 +22,7 @@ TcpClient::TcpClient(const QString &serverName, int serverPort,
 
 void TcpClient::slotReadReady()
 {
-    QString data;
+    char *packet;
     QDataStream in(this);
     in.setVersion(QDataStream::Qt_4_8);
 
@@ -31,9 +31,11 @@ void TcpClient::slotReadReady()
         if (!bytesAvailable())
             break;
 
-        in >> data;
+        in >> packet;
+        std::string packetStr(packet);
+        delete[] packet;
 
-        emit signalDataReceived(data);
+        emit signalDataReceived(packetStr);
     }
 }
 
@@ -73,7 +75,7 @@ void TcpClient::sendToServer(const char *packet)
     QDataStream out(&arrBlock, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_8);
 
-    out << QString(packet);
+    out << packet;
 
     if (write(arrBlock) == -1)
         qWarning("Failed send data to server");

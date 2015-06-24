@@ -110,8 +110,8 @@ void CentralWidget::createTcpClient()
     connect(tcpClient, SIGNAL(connected()), this, SLOT(slotClientConnected()));
     connect(tcpClient, SIGNAL(disconnected()), this,
         SLOT(slotClientDisconnected()));
-    connect(tcpClient, SIGNAL(signalDataReceived(const QString &)), this,
-        SLOT(slotClientGetData(const QString &)));
+    connect(tcpClient, SIGNAL(signalDataReceived(const std::string &)), this,
+        SLOT(slotClientGetData(const std::string &)));
     connect(tcpClient, SIGNAL(signalError(const QString &)),
         this, SLOT(slotClientConnectionError(const QString &)));
 }
@@ -337,43 +337,50 @@ void CentralWidget::slotSendCmdToServer()
 
 void CentralWidget::slotCarDirectCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_RUN_DIRECT);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        std::to_string(Cmd::CMD_DATA_CAR_MOVE_RUN_DIRECT));
 }
 
 void CentralWidget::slotCarReverseCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_RUN_REVERSE);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        std::to_string(Cmd::CMD_DATA_CAR_MOVE_RUN_REVERSE));
 }
 
 void CentralWidget::slotCarLeftCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_TURN_LEFT);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        std::to_string(Cmd::CMD_DATA_CAR_MOVE_TURN_LEFT));
 }
 
 void CentralWidget::slotCarRightCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_TURN_RIGHT);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        std::to_string(Cmd::CMD_DATA_CAR_MOVE_TURN_RIGHT));
 }
 
 void CentralWidget::slotCarStopCmd()
 {
-    cmd->enqeue(Cmd::CMD_CAR_MOVE, Cmd::CMD_DATA_CAR_MOVE_STOP);
+    cmd->enqeue(Cmd::CMD_CAR_MOVE,
+        std::to_string(Cmd::CMD_DATA_CAR_MOVE_STOP));
 }
 
 void CentralWidget::slotHornSignalStart()
 {
-    cmd->enqeue(Cmd::CMD_HORN_SIGNAL, Cmd::CMD_DATA_HORN_SIGNAL_START);
+    cmd->enqeue(Cmd::CMD_HORN_SIGNAL,
+        std::to_string(Cmd::CMD_DATA_HORN_SIGNAL_START));
 }
 
 void CentralWidget::slotHornSignalStop()
 {
-    cmd->enqeue(Cmd::CMD_HORN_SIGNAL, Cmd::CMD_DATA_HORN_SIGNAL_STOP);
+    cmd->enqeue(Cmd::CMD_HORN_SIGNAL,
+        std::to_string(Cmd::CMD_DATA_HORN_SIGNAL_STOP));
 }
 
 void CentralWidget::slotHeadlightsStageChange(bool on)
 {
-    cmd->enqeue(Cmd::CMD_HEADLIGHTS, on ? Cmd::CMD_DATA_HEADLIGHTS_ON :
-        Cmd::CMD_DATA_HEADLIGHTS_OFF);
+    cmd->enqeue(Cmd::CMD_HEADLIGHTS, std::to_string(on ?
+        Cmd::CMD_DATA_HEADLIGHTS_ON : Cmd::CMD_DATA_HEADLIGHTS_OFF));
 }
 
 #ifdef Q_OS_LINUX
@@ -727,7 +734,7 @@ void CentralWidget::updateSpeed(int speed)
     speedmeter->setValue(speed);
 }
 
-void CentralWidget::handleServerResp(char resp, const QString &respData)
+void CentralWidget::handleServerResp(char resp, const std::string &respData)
 {
     switch (resp)
     {
@@ -736,23 +743,62 @@ void CentralWidget::handleServerResp(char resp, const QString &respData)
         break;
     case Cmd::CMD_RESP_DIST_TO_OBSTACLE:
     {
-        bool ok;
-        int dist = respData.toInt(&ok);
-        updateDistanceToObstacle(ok ? dist : 0);
+        int dist;
+        try
+        {
+            dist = std::stoi(respData);
+        }
+        catch (std::invalid_argument)
+        {
+            qDebug() << "Failed to get command's data";
+            dist = 0;
+        }
+        catch (std::out_of_range)
+        {
+            qDebug() << "Failed to get command's data";
+            dist = 0;
+        }
+        updateDistanceToObstacle(dist);
         break;
     }
     case Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL:
     {
-        bool ok;
-        int batteryChargeLevel = respData.toInt(&ok);
-        updateBatteryChargeLevel(ok ? batteryChargeLevel : 0);
+        int batteryChargeLevel;
+        try
+        {
+            batteryChargeLevel = std::stoi(respData);
+        }
+        catch (std::invalid_argument)
+        {
+            qDebug() << "Failed to get command's data";
+            batteryChargeLevel = 0;
+        }
+        catch (std::out_of_range)
+        {
+            qDebug() << "Failed to get command's data";
+            batteryChargeLevel = 0;
+        }
+        updateBatteryChargeLevel(batteryChargeLevel);
         break;
     }
     case Cmd::CMD_RESP_SPEED:
     {
-        bool ok;
-        int speed = respData.toInt(&ok);
-        updateSpeed(ok ? speed : 0);
+        int speed;
+        try
+        {
+            speed = std::stoi(respData);
+        }
+        catch (std::invalid_argument)
+        {
+            qDebug() << "Failed to get command's data";
+            speed = 0;
+        }
+        catch (std::out_of_range)
+        {
+            qDebug() << "Failed to get command's data";
+            speed = 0;
+        }
+        updateSpeed(speed);
         break;
     }
     default:
@@ -761,10 +807,10 @@ void CentralWidget::handleServerResp(char resp, const QString &respData)
     }
 }
 
-void CentralWidget::slotClientGetData(QString data)
+void CentralWidget::slotClientGetData(const std::string &data)
 {
     char resp;
-    QString respData;
+    std::string respData;
 
     cmd->parseResp(data);
 
@@ -786,6 +832,8 @@ void CentralWidget::readSettings()
 
     if (settings.contains(SETTINGS_KEY_TURN_METHOD))
         setTurnMethod(settings.value(SETTINGS_KEY_TURN_METHOD).toInt());
+    else
+        setTurnMethod(Cmd::CMD_DATA_TURN_METHOD_SKID_STEER);
 }
 
 void CentralWidget::saveSettings()
@@ -797,7 +845,7 @@ void CentralWidget::saveSettings()
 
 void CentralWidget::sendSettings()
 {
-    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, getTurnMethod());
+    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, std::to_string(getTurnMethod()));
 }
 
 int CentralWidget::getTurnMethod()
@@ -809,7 +857,7 @@ void CentralWidget::setTurnMethod(int turnMethod)
 {
     this->turnMethod = turnMethod;
 
-    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, turnMethod);
+    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, std::to_string(turnMethod));
 
     saveSettings();
 }
