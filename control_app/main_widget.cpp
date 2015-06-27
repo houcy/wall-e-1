@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QCheckBox>
+#include <sstream>
 
 #define SERVER_PORT 5000
 
@@ -625,12 +626,17 @@ void MainWidget::slotUpdateConnection()
 
 void MainWidget::sendResponseToClient()
 {
-    cmd->enqueueResp(Cmd::CMD_RESP_ACK, std::string(""));
-    cmd->enqueueResp(Cmd::CMD_RESP_DIST_TO_OBSTACLE,
-        std::to_string(distToObstacle));
-    cmd->enqueueResp(Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL,
-        std::to_string(batteryChargeLevel));
-    cmd->enqueueResp(Cmd::CMD_RESP_SPEED, std::to_string(speed));
+    std::stringstream ss;
+
+    cmd->enqueueResp(Cmd::CMD_RESP_ACK, ss.str());
+    ss << distToObstacle;
+    cmd->enqueueResp(Cmd::CMD_RESP_DIST_TO_OBSTACLE, ss.str());
+    ss.str("");
+    ss << batteryChargeLevel;
+    cmd->enqueueResp(Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL, ss.str());
+    ss.str("");
+    ss << speed;
+    cmd->enqueueResp(Cmd::CMD_RESP_SPEED, ss.str());
 
     server->sendToClient(cmd->getRespData());
 
