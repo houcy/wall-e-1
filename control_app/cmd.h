@@ -26,31 +26,31 @@ public:
     };
     enum CmdDataNone
     {
-        CMD_DATA_NONE
+        CMD_DATA_NONE = 1
     };
     enum CmdCarMoveData
     {
-        CMD_DATA_CAR_MOVE_RUN_FREE,
-        CMD_DATA_CAR_MOVE_RUN_DIRECT,
-        CMD_DATA_CAR_MOVE_RUN_REVERSE,
-        CMD_DATA_CAR_MOVE_TURN_LEFT,
-        CMD_DATA_CAR_MOVE_TURN_RIGHT,
-        CMD_DATA_CAR_MOVE_STOP
+        CMD_DATA_CAR_MOVE_RUN_FREE = 1,
+        CMD_DATA_CAR_MOVE_RUN_DIRECT = 2,
+        CMD_DATA_CAR_MOVE_RUN_REVERSE = 3,
+        CMD_DATA_CAR_MOVE_TURN_LEFT = 4,
+        CMD_DATA_CAR_MOVE_TURN_RIGHT = 5,
+        CMD_DATA_CAR_MOVE_STOP = 6
     };
     enum CmdDataTurnMethod
     {
-        CMD_DATA_TURN_METHOD_DIRERENTIAL,
-        CMD_DATA_TURN_METHOD_SKID_STEER
+        CMD_DATA_TURN_METHOD_DIRERENTIAL = 1,
+        CMD_DATA_TURN_METHOD_SKID_STEER = 2
     };
     enum CmdDataHornSignal
     {
-        CMD_DATA_HORN_SIGNAL_START,
-        CMD_DATA_HORN_SIGNAL_STOP
+        CMD_DATA_HORN_SIGNAL_START = 1,
+        CMD_DATA_HORN_SIGNAL_STOP = 2
     };
     enum CmdDataHeadlights
     {
-        CMD_DATA_HEADLIGHTS_ON,
-        CMD_DATA_HEADLIGHTS_OFF
+        CMD_DATA_HEADLIGHTS_ON = 1,
+        CMD_DATA_HEADLIGHTS_OFF = 2
     };
     enum CmdRespNumer
     {
