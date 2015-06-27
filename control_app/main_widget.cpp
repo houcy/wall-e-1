@@ -212,22 +212,7 @@ void MainWidget::slotDataReceived(const std::string &data)
 
 void MainWidget::executeCommand(char cmd, const std::string &cmdData)
 {
-    int data;
-
-    try
-    {
-        data = std::stoi(cmdData);
-    }
-    catch (std::invalid_argument)
-    {
-        debug("Failed to get command's data");
-        return;
-    }
-    catch (std::out_of_range)
-    {
-        debug("Failed to get command's data");
-        return;
-    }
+    int data = atoi(cmdData.c_str());
 
     switch (cmd)
     {
