@@ -13,6 +13,7 @@ class Cmd
     QList< CmdItem > cmdList;
     std::string respBuf;
     const char cmdStart = ':';
+    const char cmdDelim = ',';
     const char cmdEnd = ';';
 
 public:

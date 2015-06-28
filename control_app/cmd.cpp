@@ -8,17 +8,25 @@ void Cmd::parse(const std::string &data)
     std::string cmdData;
     std::istringstream dataStream(data);
 
-    while (!dataStream.eof())
+    do
     {
-        dataStream >> delim;
+        if (!(dataStream >> delim))
+        {
+            warning("Failed to extract start delimiter");
+            return;
+        }
 
         if (delim != cmdStart)
         {
-            debug("Wrong start of command");
-            continue;
+            warning("Wrong start delimiter of command");
+            return;
         }
 
-        dataStream >> cmd;
+        if (!(dataStream >> cmd))
+        {
+            warning("Failed to extract command ID");
+            return;
+        }
 
         switch (cmd)
         {
@@ -27,21 +35,35 @@ void Cmd::parse(const std::string &data)
         case CMD_CAR_TURN_METHOD:
         case CMD_HORN_SIGNAL:
         case CMD_HEADLIGHTS:
-           std::getline(dataStream, cmdData, cmdEnd);
-           if (dataStream.bad())
-           {
-               debug("Failed to get command's data");
-               continue;
-           }
-           break;
+            if (!(dataStream >> delim))
+            {
+                warning("Failed to extract delimiter of command");
+                return;
+            }
+
+            if (delim != cmdDelim)
+            {
+                warning("Wrong delimiter of command");
+                return;
+            }
+
+            if (!std::getline(dataStream, cmdData, cmdEnd))
+            {
+                warning("Failed to extract data of command");
+                return;
+            }
+
+            // Set eofbit of stream by reading new character
+            dataStream.peek();
+            break;
         default:
-           debug("Wrong car command");
-           continue;
+            warning("Wrong command ID");
+            return;
         };
 
         CmdItem cmdItem = { cmd, cmdData };
         cmdList.append(cmdItem);
-    }
+    } while (!dataStream.eof());
 }
 
 int Cmd::get(char &cmd, std::string &cmdData)
@@ -62,6 +84,7 @@ void Cmd::enqueueResp(char resp, const std::string &respData)
 {
     respBuf += cmdStart;
     respBuf += resp;
+    respBuf += cmdDelim;
     respBuf += respData;
     respBuf += cmdEnd;
 }

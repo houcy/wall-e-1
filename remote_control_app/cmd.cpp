@@ -7,6 +7,7 @@ Cmd::Cmd()
 {
     emptyCmd += cmdStart;
     emptyCmd += CMD_NONE;
+    emptyCmd += cmdDelim;
     emptyCmd += std::to_string(CMD_DATA_NONE);
     emptyCmd += cmdEnd;
 }
@@ -15,6 +16,7 @@ void Cmd::enqeue(char cmd, const std::string &cmdData)
 {
     cmdBuf += cmdStart;
     cmdBuf += cmd;
+    cmdBuf += cmdDelim;
     cmdBuf += cmdData;
     cmdBuf += cmdEnd;
 }
@@ -43,21 +45,29 @@ void Cmd::clear()
 
 void Cmd::parseResp(const std::string &data)
 {
-    char respStart, resp;
+    char delim, resp;
     std::string respData;
     std::istringstream dataStream(data);
 
-    while (!dataStream.eof())
+    do
     {
-        dataStream >> respStart;
-
-        if (respStart != cmdStart)
+        if (!(dataStream >> delim))
         {
-            qDebug() << "Wrong start of response";
-            continue;
+            qWarning() << "Failed to extract start delimiter of response";
+            return;
         }
 
-        dataStream >> resp;
+        if (delim != cmdStart)
+        {
+            qWarning() << "Wrong start delimiter of response";
+            return;
+        }
+
+        if (!(dataStream >> resp))
+        {
+            qWarning() << "Failed to extract response ID";
+            return;
+        }
 
         switch (resp)
         {
@@ -65,16 +75,35 @@ void Cmd::parseResp(const std::string &data)
         case Cmd::CMD_RESP_DIST_TO_OBSTACLE:
         case Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL:
         case Cmd::CMD_RESP_SPEED:
-            std::getline(dataStream, respData, cmdEnd);
+            if (!(dataStream >> delim))
+            {
+                qWarning() << "Failed to extract delimiter of command";
+                return;
+            }
+
+            if (delim != cmdDelim)
+            {
+                qWarning() << "Wrong delimiter of command";
+                return;
+            }
+
+            if (!std::getline(dataStream, respData, cmdEnd))
+            {
+                qWarning() << "Failed to extract data of command";
+                return;
+            }
+
+            // Set eofbit of stream by reading new character
+            dataStream.peek();
             break;
         default:
-            qDebug() << "Wrong response";
+            qWarning() << "Wrong response ID";
             return;
         };
 
         RespItem respItem = { resp, respData };
         respList.append(respItem);
-    }
+    } while (!dataStream.eof());
 }
 
 int Cmd::getResp(char &resp, std::string &respData)

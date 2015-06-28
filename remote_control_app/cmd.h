@@ -16,6 +16,7 @@ class Cmd
     std::string emptyCmd;
     QList< RespItem > respList;
     const char cmdStart = ':';
+    const char cmdDelim = ',';
     const char cmdEnd = ';';
 
 public:
