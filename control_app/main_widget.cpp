@@ -213,7 +213,13 @@ void MainWidget::slotDataReceived(const std::string &data)
 
 void MainWidget::executeCommand(char cmd, const std::string &cmdData)
 {
-    int data = atoi(cmdData.c_str());
+    long data = strtol(cmdData.c_str(), nullptr, 10);
+
+    if (!data || data == LONG_MAX || data == LONG_MIN)
+    {
+        critical("Failed to convert data of command");
+        return;
+    }
 
     switch (cmd)
     {
