@@ -211,7 +211,7 @@ void MainWidget::slotDataReceived(const std::string &data)
     sendResponseToClient();
 }
 
-void MainWidget::executeCommand(char cmd, const std::string &cmdData)
+void MainWidget::executeCommand(int cmd, const std::string &cmdData)
 {
     long data = strtol(cmdData.c_str(), nullptr, 10);
 

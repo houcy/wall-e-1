@@ -54,7 +54,7 @@ class MainWidget : public QWidget
 
     QGroupBox *motorTestCreate(int motor, const QString &groupText);
     QWidget *carTestCreate();
-    void executeCommand(char cmd, const std::string &cmdData);
+    void executeCommand(int cmd, const std::string &cmdData);
     QLabel *createPageTitle(const QString &title);
     QWidget *createStatusPage();
     QWidget *createMotorTestPage();
