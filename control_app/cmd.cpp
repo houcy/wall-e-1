@@ -4,8 +4,9 @@
 
 void Cmd::parse(const std::string &data)
 {
-    char delim, cmd;
-    std::string cmdData;
+    char delim;
+    long cmdId;
+    std::string cmdIdStr, cmdData;
     std::istringstream dataStream(data);
 
     do
@@ -22,31 +23,26 @@ void Cmd::parse(const std::string &data)
             return;
         }
 
-        if (!(dataStream >> cmd))
+        if (!std::getline(dataStream, cmdIdStr, cmdDelim))
         {
             warning("Failed to extract command ID");
             return;
         }
 
-        switch (cmd)
+        cmdId = strtol(cmdIdStr.c_str(), nullptr, 10);
+        if (!cmdId || cmdId == LONG_MAX || cmdId == LONG_MIN)
+        {
+            warning("Failed to convert command ID");
+            return;
+        }
+
+        switch (cmdId)
         {
         case CMD_NONE:
         case CMD_CAR_MOVE:
         case CMD_CAR_TURN_METHOD:
         case CMD_HORN_SIGNAL:
         case CMD_HEADLIGHTS:
-            if (!(dataStream >> delim))
-            {
-                warning("Failed to extract delimiter of command");
-                return;
-            }
-
-            if (delim != cmdDelim)
-            {
-                warning("Wrong delimiter of command");
-                return;
-            }
-
             if (!std::getline(dataStream, cmdData, cmdEnd))
             {
                 warning("Failed to extract data of command");
@@ -61,17 +57,17 @@ void Cmd::parse(const std::string &data)
             return;
         };
 
-        CmdItem cmdItem = { cmd, cmdData };
+        CmdItem cmdItem = { cmdId, cmdData };
         cmdList.append(cmdItem);
     } while (!dataStream.eof());
 }
 
-int Cmd::get(char &cmd, std::string &cmdData)
+int Cmd::get(int &cmdId, std::string &cmdData)
 {
     if (!cmdList.isEmpty())
     {
         CmdItem cmdItem = cmdList.takeFirst();
-        cmd = cmdItem.cmd;
+        cmdId = cmdItem.cmdId;
         cmdData = cmdItem.cmdData;
 
         return 0;
@@ -80,10 +76,14 @@ int Cmd::get(char &cmd, std::string &cmdData)
         return -1;
 }
 
-void Cmd::enqueueResp(char resp, const std::string &respData)
+void Cmd::enqueueResp(int cmdRespId, const std::string &respData)
 {
+    std::ostringstream oss;
+
+    oss << cmdRespId;
+
     respBuf += cmdStart;
-    respBuf += resp;
+    respBuf += oss.str();
     respBuf += cmdDelim;
     respBuf += respData;
     respBuf += cmdEnd;

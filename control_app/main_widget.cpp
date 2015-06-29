@@ -200,7 +200,7 @@ QHBoxLayout *MainWidget::createMainLayout()
 
 void MainWidget::slotDataReceived(const std::string &data)
 {
-    char command;
+    int command;
     std::string commandData;
 
     cmd->parse(data);

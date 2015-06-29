@@ -734,9 +734,9 @@ void CentralWidget::updateSpeed(int speed)
     speedmeter->setValue(speed);
 }
 
-void CentralWidget::handleServerResp(char resp, const std::string &respData)
+void CentralWidget::handleServerResp(int respId, const std::string &respData)
 {
-    switch (resp)
+    switch (respId)
     {
     case Cmd::CMD_RESP_ACK:
         receiveCmdAckTimer->start(CMD_ACK_TIMEOUT);
@@ -809,13 +809,13 @@ void CentralWidget::handleServerResp(char resp, const std::string &respData)
 
 void CentralWidget::slotClientGetData(const std::string &data)
 {
-    char resp;
+    int respId;
     std::string respData;
 
     cmd->parseResp(data);
 
-    while (!cmd->getResp(resp, respData))
-        handleServerResp(resp, respData);
+    while (!cmd->getResp(respId, respData))
+        handleServerResp(respId, respData);
 }
 
 void CentralWidget::slotClientCommunicationTimeout()

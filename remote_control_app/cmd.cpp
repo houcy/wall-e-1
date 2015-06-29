@@ -6,16 +6,16 @@
 Cmd::Cmd()
 {
     emptyCmd += cmdStart;
-    emptyCmd += CMD_NONE;
+    emptyCmd += std::to_string(CMD_NONE);
     emptyCmd += cmdDelim;
     emptyCmd += std::to_string(CMD_DATA_NONE);
     emptyCmd += cmdEnd;
 }
 
-void Cmd::enqeue(char cmd, const std::string &cmdData)
+void Cmd::enqeue(int cmdId, const std::string &cmdData)
 {
     cmdBuf += cmdStart;
-    cmdBuf += cmd;
+    cmdBuf += std::to_string(cmdId);
     cmdBuf += cmdDelim;
     cmdBuf += cmdData;
     cmdBuf += cmdEnd;
@@ -45,8 +45,9 @@ void Cmd::clear()
 
 void Cmd::parseResp(const std::string &data)
 {
-    char delim, resp;
-    std::string respData;
+    char delim;
+    long respId;
+    std::string respIdStr, respData;
     std::istringstream dataStream(data);
 
     do
@@ -63,30 +64,25 @@ void Cmd::parseResp(const std::string &data)
             return;
         }
 
-        if (!(dataStream >> resp))
+        if (!std::getline(dataStream, respIdStr, cmdDelim))
         {
             qWarning() << "Failed to extract response ID";
             return;
         }
 
-        switch (resp)
+        respId = strtol(respIdStr.c_str(), nullptr, 10);
+        if (!respId || respId == LONG_MAX || respId == LONG_MIN)
+        {
+            qWarning() << "Failed to convert response ID";
+            return;
+        }
+
+        switch (respId)
         {
         case Cmd::CMD_RESP_ACK:
         case Cmd::CMD_RESP_DIST_TO_OBSTACLE:
         case Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL:
         case Cmd::CMD_RESP_SPEED:
-            if (!(dataStream >> delim))
-            {
-                qWarning() << "Failed to extract delimiter of command";
-                return;
-            }
-
-            if (delim != cmdDelim)
-            {
-                qWarning() << "Wrong delimiter of command";
-                return;
-            }
-
             if (!std::getline(dataStream, respData, cmdEnd))
             {
                 qWarning() << "Failed to extract data of command";
@@ -101,17 +97,17 @@ void Cmd::parseResp(const std::string &data)
             return;
         };
 
-        RespItem respItem = { resp, respData };
+        RespItem respItem = { respId, respData };
         respList.append(respItem);
     } while (!dataStream.eof());
 }
 
-int Cmd::getResp(char &resp, std::string &respData)
+int Cmd::getResp(int &respId, std::string &respData)
 {
     if (!respList.isEmpty())
     {
         RespItem respItem = respList.takeFirst();
-        resp = respItem.resp;
+        respId = respItem.respId;
         respData = respItem.respData;
 
         return 0;

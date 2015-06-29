@@ -102,7 +102,7 @@ class CentralWidget : public QWidget
     void readSettings();
     void saveSettings();
     void sendSettings();
-    void handleServerResp(char resp, const std::string &respData);
+    void handleServerResp(int respId, const std::string &respData);
     void updateDistanceToObstacle(int dist);
     void updateBatteryChargeLevel(int batteryChargeLevelLabel);
     void updateSpeed(int speed);

@@ -8,7 +8,7 @@ class Cmd
 {
     typedef struct
     {
-        char resp;
+        int respId;
         std::string respData;
     } RespItem;
 
@@ -22,11 +22,11 @@ class Cmd
 public:
     enum CmdNumer
     {
-        CMD_NONE = '0',
-        CMD_CAR_MOVE = '1',
-        CMD_CAR_TURN_METHOD = '2',
-        CMD_HORN_SIGNAL = '3',
-        CMD_HEADLIGHTS = '4'
+        CMD_NONE = 1,
+        CMD_CAR_MOVE = 2,
+        CMD_CAR_TURN_METHOD = 3,
+        CMD_HORN_SIGNAL = 4,
+        CMD_HEADLIGHTS = 5
     };
     enum CmdDataNone
     {
@@ -58,19 +58,19 @@ public:
     };
     enum CmdRespNumer
     {
-        CMD_RESP_ACK = '0',
-        CMD_RESP_DIST_TO_OBSTACLE = '1',
-        CMD_RESP_BATTERY_CHARGE_LEVEL = '2',
-        CMD_RESP_SPEED = '3'
+        CMD_RESP_ACK = 1,
+        CMD_RESP_DIST_TO_OBSTACLE = 2,
+        CMD_RESP_BATTERY_CHARGE_LEVEL = 3,
+        CMD_RESP_SPEED = 4
     };
 
     Cmd();
-    void enqeue(char cmd, const std::string &cmdData);
+    void enqeue(int cmdId, const std::string &cmdData);
     void clear();
     const char *getData() const;
     unsigned int size() const;
     void parseResp(const std::string &data);
-    int getResp(char &resp, std::string &respData);
+    int getResp(int &respId, std::string &respData);
 };
 
 #endif // CMD_H
