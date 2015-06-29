@@ -119,4 +119,8 @@ The schematic is at platform/at91sam9g45-ekes/schematic/schematic.BMP. The proto
 The Control application design:  
 <img src="design/control_app_uml.jpg">
 
+### Protocol
+The communication protocol between applications is text based. Each packet contains null-terminated string. The string includes several commands in a row.
+Command structure is shown below:  
+<img src="design/protocol.png">
 
