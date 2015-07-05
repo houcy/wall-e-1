@@ -24,6 +24,21 @@ Windows 7/Kubuntu 14.04: Qt 5.3.2 32bit, g++ 4.9.2, VLC library 2.1.4.
 Embedded linux: buildroot-2013.05 (Qt embedded 4.8.4, g++ 4.7.3).  
 Kubuntu 14.04: Qt 4.8.4, g++ 4.7.3
 
+### Qt project configuration
+Steps to configure Qt Creator for embedded Linux in order to build Control application:  
+
+1. Projects -> Manage Kits -> Build & Run -> Qt Versions -> Add...  
+Version Name: Qt 4.8.4 (qt-4.8.4) buildroot  
+qmake location: &lt;Buildroot folder&gt;/output/build/qt-4.8.4/bin/qmake
+1. Projects -> Manage Kits -> Build & Run -> Compilers -> Add -> GCC  
+Name: ARM_BUILDROOT_GCC  
+Compiler Path: &lt;Buildroot folder&gt;/output/host/usr/bin/arm-linux-gcc  
+1. Projects -> Manage Kits -> Build & Run -> Kits -> Add  
+Name: buildroot-arm-none-eabi-gcc  
+Sysroot: &lt;Buildroot folder&gt;/output/target  
+Compiler: ARM_BUILDROOT_GCC  
+Qt version: Qt 4.8.4 (qt-4.8.4) buildroot  
+
 ##Demo run
 Control application and remote application can run on the same PC for demo purposes.  
 
@@ -33,7 +48,8 @@ Kubuntu 14.04, gstreamer 0.10.36 + plugins.
 ###Execute applications:
 1. Create ethernet device alias with 192.168.3.1 IP:  
 $ sudo ifconfig eth0:0 192.168.3.1 up
-1. Execute desktop build of Control application.
+1. Create regular Desktop build configuration for Control application in Qt Creator.
+1. Execute Desktop build of Control application.
 1. Execute Remote application and press "Connect" button.
 1. After connection is established connection status is "Connected", video from PC web-camera is shown and audio from PC microphone can be heard in headphones.  
 
