@@ -51,6 +51,7 @@ class MainWidget : public QWidget
     QTimer *hallSpeedSensorTimer;
     SlidingStackedWidget *slideWidget;
     std::unique_ptr< Headlights > headlights;
+    bool sendTurnMethod;
 
     QGroupBox *motorTestCreate(int motor, const QString &groupText);
     QWidget *carTestCreate();

@@ -40,7 +40,8 @@ void Cmd::parse(const std::string &data)
         {
         case CMD_NONE:
         case CMD_CAR_MOVE:
-        case CMD_CAR_TURN_METHOD:
+        case CMD_CAR_SET_TURN_METHOD:
+        case CMD_CAR_GET_TURN_METHOD:
         case CMD_HORN_SIGNAL:
         case CMD_HEADLIGHTS:
             if (!std::getline(dataStream, cmdData, cmdEnd))

@@ -35,7 +35,7 @@
 #define CAR_CMD_BUTTON_WIDTH 50
 #define CAR_CMD_BUTTON_HEIGHT 50
 
-#define SETTINGS_KEY_TURN_METHOD "turn_method"
+#define SETTINGS_KEY_DUMMY "dummy"
 
 #define DISTANCE_TO_OBSTACLE "Distance: "
 #define BATTERY_CHARGE "Battery charge: "
@@ -79,7 +79,9 @@ CentralWidget::CentralWidget(QWidget *parent) :
 
     setupKeyHook();
 
-    readSettings();
+    readLocalSettings();
+
+    initRemoteSettings();
 }
 
 CentralWidget::~CentralWidget()
@@ -651,7 +653,8 @@ void CentralWidget::slotClientConnected()
     receiveCmdAckTimer->start(CMD_ACK_TIMEOUT);
     videoPlayer->restart();
     videoPlayer->showVideoWidget(true);
-    sendSettings();
+
+    reqRemoteSettings();
 }
 
 void CentralWidget::slotClientDisconnected()
@@ -675,6 +678,7 @@ void CentralWidget::slotClientDisconnected()
     updateBatteryChargeLevel(0);
     updateSpeed(0);
     updateDistanceToObstacle(0);
+    initRemoteSettings();
 }
 
 void CentralWidget::slotClientConnecting()
@@ -801,6 +805,26 @@ void CentralWidget::handleServerResp(int respId, const std::string &respData)
         updateSpeed(speed);
         break;
     }
+    case Cmd::CMD_RESP_TURN_METHOD:
+    {
+        int turnMethod;
+        try
+        {
+            turnMethod = std::stoi(respData);
+        }
+        catch (std::invalid_argument)
+        {
+            qDebug() << "Failed to get command's data";
+            turnMethod = Cmd::CMD_DATA_TURN_METHOD_UNDEF;
+        }
+        catch (std::out_of_range)
+        {
+            qDebug() << "Failed to get command's data";
+            turnMethod = Cmd::CMD_DATA_TURN_METHOD_UNDEF;
+        }
+        setTurnMethod(turnMethod);
+        break;
+    }
     default:
         qCritical("Wrong response from server");
         break;
@@ -826,26 +850,38 @@ void CentralWidget::slotClientCommunicationTimeout()
     qCritical("Communication timeout");
 }
 
-void CentralWidget::readSettings()
+void CentralWidget::readLocalSettings()
 {
     QSettings settings;
 
-    if (settings.contains(SETTINGS_KEY_TURN_METHOD))
-        setTurnMethod(settings.value(SETTINGS_KEY_TURN_METHOD).toInt());
-    else
-        setTurnMethod(Cmd::CMD_DATA_TURN_METHOD_SKID_STEER);
+    if (settings.contains(SETTINGS_KEY_DUMMY))
+        settings.value(SETTINGS_KEY_DUMMY).toInt();
 }
 
-void CentralWidget::saveSettings()
+void CentralWidget::writeLocalSettings()
 {
     QSettings settings;
 
-    settings.setValue(SETTINGS_KEY_TURN_METHOD, getTurnMethod());
+    settings.setValue(SETTINGS_KEY_DUMMY, 0);
 }
 
-void CentralWidget::sendSettings()
+void CentralWidget::reqRemoteSettings()
 {
-    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, std::to_string(getTurnMethod()));
+    cmd->enqeue(Cmd::CMD_CAR_GET_TURN_METHOD,
+        std::to_string(Cmd::CMD_DATA_NONE));
+}
+
+void CentralWidget::sendRemoteSettings()
+{
+    int tm = getTurnMethod();
+
+    if (tm != Cmd::CMD_DATA_TURN_METHOD_UNDEF)
+        cmd->enqeue(Cmd::CMD_CAR_SET_TURN_METHOD, std::to_string(tm));
+}
+
+void CentralWidget::initRemoteSettings()
+{
+    setTurnMethod(Cmd::CMD_DATA_TURN_METHOD_UNDEF);
 }
 
 int CentralWidget::getTurnMethod()
@@ -856,8 +892,5 @@ int CentralWidget::getTurnMethod()
 void CentralWidget::setTurnMethod(int turnMethod)
 {
     this->turnMethod = turnMethod;
-
-    cmd->enqeue(Cmd::CMD_CAR_TURN_METHOD, std::to_string(turnMethod));
-
-    saveSettings();
 }
+

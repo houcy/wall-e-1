@@ -21,9 +21,10 @@ public:
     {
         CMD_NONE = 1,
         CMD_CAR_MOVE = 2,
-        CMD_CAR_TURN_METHOD = 3,
-        CMD_HORN_SIGNAL = 4,
-        CMD_HEADLIGHTS = 5
+        CMD_CAR_SET_TURN_METHOD = 3,
+        CMD_CAR_GET_TURN_METHOD = 4,
+        CMD_HORN_SIGNAL = 5,
+        CMD_HEADLIGHTS = 6,
     };
     enum CmdDataNone
     {
@@ -40,6 +41,7 @@ public:
     };
     enum CmdDataTurnMethod
     {
+        CMD_DATA_TURN_METHOD_UNDEF = 0,
         CMD_DATA_TURN_METHOD_DIRERENTIAL = 1,
         CMD_DATA_TURN_METHOD_SKID_STEER = 2
     };
@@ -58,7 +60,8 @@ public:
         CMD_RESP_ACK = 1,
         CMD_RESP_DIST_TO_OBSTACLE = 2,
         CMD_RESP_BATTERY_CHARGE_LEVEL = 3,
-        CMD_RESP_SPEED = 4
+        CMD_RESP_SPEED = 4,
+        CMD_RESP_TURN_METHOD = 5
     };
 
     void parse(const std::string &data);

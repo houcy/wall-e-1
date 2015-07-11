@@ -83,6 +83,7 @@ void Cmd::parseResp(const std::string &data)
         case Cmd::CMD_RESP_DIST_TO_OBSTACLE:
         case Cmd::CMD_RESP_BATTERY_CHARGE_LEVEL:
         case Cmd::CMD_RESP_SPEED:
+        case Cmd::CMD_RESP_TURN_METHOD:
             if (!std::getline(dataStream, respData, cmdEnd))
             {
                 qWarning() << "Failed to extract data of command";

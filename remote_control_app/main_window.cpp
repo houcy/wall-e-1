@@ -50,6 +50,11 @@ void MainWindow::showOptionsDialog()
 
 void MainWindow::saveOptions()
 {
+    // save local settings
+    centWidget->writeLocalSettings();
+
+    // save remote settings
     centWidget->setTurnMethod(optionsDialog->getTurnMethod());
+    centWidget->sendRemoteSettings();
 }
 

@@ -83,6 +83,8 @@ void MainWidget::setupCmd()
     cmdTimeoutTimer = new QTimer(this);
     connect(cmdTimeoutTimer, SIGNAL(timeout()), this,
         SLOT(slotCmdTimeoutHandler()));
+
+    sendTurnMethod = false;
 }
 
 void MainWidget::setupServer()
@@ -251,7 +253,7 @@ void MainWidget::executeCommand(int cmd, const std::string &cmdData)
             return;
         }
         break;
-    case Cmd::CMD_CAR_TURN_METHOD:
+    case Cmd::CMD_CAR_SET_TURN_METHOD:
         switch (data)
         {
         case Cmd::CMD_DATA_TURN_METHOD_DIRERENTIAL:
@@ -265,6 +267,9 @@ void MainWidget::executeCommand(int cmd, const std::string &cmdData)
             return;
         }
         saveSettings();
+        break;
+    case Cmd::CMD_CAR_GET_TURN_METHOD:
+        sendTurnMethod = true;
         break;
     case Cmd::CMD_HORN_SIGNAL:
         switch (data)
@@ -643,6 +648,29 @@ void MainWidget::sendResponseToClient()
     ss.str("");
     ss << speed;
     cmd->enqueueResp(Cmd::CMD_RESP_SPEED, ss.str());
+
+    if (sendTurnMethod)
+    {
+        int cmdTurnMethod;
+
+        sendTurnMethod = false;
+
+        switch (car->getTurnMethod())
+        {
+        case Car::CAR_TURN_METHOD_DIFFERENTIAL:
+            cmdTurnMethod = Cmd::CMD_DATA_TURN_METHOD_DIRERENTIAL;
+            break;
+        case Car::CAR_TURN_METHOD_SKID_STEER:
+            cmdTurnMethod = Cmd::CMD_DATA_TURN_METHOD_SKID_STEER;
+            break;
+        default:
+            critical("Wrong turn method\n");
+            return;
+        }
+        ss.str("");
+        ss << cmdTurnMethod;
+        cmd->enqueueResp(Cmd::CMD_RESP_TURN_METHOD, ss.str());
+    }
 
     server->sendToClient(cmd->getRespData());
 

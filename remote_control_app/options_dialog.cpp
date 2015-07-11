@@ -58,16 +58,23 @@ QGridLayout *OptionsDialog::createDialogLayout()
 
 void OptionsDialog::setTurnMethod(int turnMethod)
 {
-    int index = carTurnMethodComboBox->findData(QVariant(turnMethod));
-
-    if (index != -1)
-        carTurnMethodComboBox->setCurrentIndex(index);
+    if (turnMethod != Cmd::CMD_DATA_TURN_METHOD_UNDEF)
+    {
+        carTurnMethodComboBox->setEnabled(true);
+        carTurnMethodComboBox->setCurrentIndex(carTurnMethodComboBox->
+            findData(QVariant(turnMethod)));
+    }
     else
-        qWarning("Wrong turn method");
+        carTurnMethodComboBox->setEnabled(false);
 }
 
 int OptionsDialog::getTurnMethod()
 {
-    return carTurnMethodComboBox->
-        itemData(carTurnMethodComboBox->currentIndex()).toInt();
+    if (carTurnMethodComboBox->isEnabled())
+    {
+        return carTurnMethodComboBox->
+            itemData(carTurnMethodComboBox->currentIndex()).toInt();
+    }
+
+    return Cmd::CMD_DATA_TURN_METHOD_UNDEF;
 }

@@ -99,13 +99,11 @@ class CentralWidget : public QWidget
     QVBoxLayout *createLeftPanel();
     QHBoxLayout *createLayout();
     void setupKeyHook();
-    void readSettings();
-    void saveSettings();
-    void sendSettings();
     void handleServerResp(int respId, const std::string &respData);
     void updateDistanceToObstacle(int dist);
     void updateBatteryChargeLevel(int batteryChargeLevelLabel);
     void updateSpeed(int speed);
+    void initRemoteSettings();
 
 public:
     explicit CentralWidget(QWidget *parent = 0);
@@ -115,6 +113,10 @@ public:
 
     void setTurnMethod(int turnMethod);
     int getTurnMethod();
+    void readLocalSettings();
+    void writeLocalSettings();
+    void reqRemoteSettings();
+    void sendRemoteSettings();
 
 public slots:
     void slotSendCmdToServer();
