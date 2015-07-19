@@ -23,6 +23,7 @@ class UltrasonicDistSensor;
 class BatteryMonitor;
 class HallSpeedSensor;
 class Headlights;
+class Joystick;
 
 class MainWidget : public QWidget
 {
@@ -52,6 +53,7 @@ class MainWidget : public QWidget
     SlidingStackedWidget *slideWidget;
     std::unique_ptr< Headlights > headlights;
     bool sendTurnMethod;
+    Joystick *joystick;
 
     QGroupBox *motorTestCreate(int motor, const QString &groupText);
     QWidget *carTestCreate();
@@ -74,6 +76,7 @@ class MainWidget : public QWidget
     void setupBatteryMonitor();
     void setupSpeedSensor();
     void setupHeadlights();
+    void setupJoystick();
     SlidingStackedWidget *createSlideWidget();
     QVBoxLayout *createNavigationButton(const char *imagePath, SlidingStackedWidget *sw,
         const char *slot);
@@ -106,6 +109,8 @@ public slots:
     void slotUpdateDistance();
     void slotUpdateBatteryMonitor();
     void slotUpdateSpeed();
+    void slotJoystickEvent(std::uint8_t type, std::uint8_t num,
+        std::int16_t value);
 };
 
 #endif // MAINWIDGET_H

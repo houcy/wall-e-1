@@ -12,6 +12,7 @@
 #include "battery_monitor.h"
 #include "hall_speed_sensor.h"
 #include "headlights.h"
+#include "joystick.h"
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QGroupBox>
@@ -59,6 +60,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     setupBatteryMonitor();
     setupSpeedSensor();
     setupHeadlights();
+    setupJoystick();
 
     setLayout(createMainLayout());
 
@@ -153,6 +155,14 @@ void MainWidget::setupSpeedSensor()
 void MainWidget::setupHeadlights()
 {
     headlights = std::unique_ptr< Headlights >(new Headlights);
+}
+
+void MainWidget::setupJoystick()
+{
+    joystick = new Joystick(this);
+    connect(joystick,
+        SIGNAL(joystickEvent(std::uint8_t, std::uint8_t, std::int16_t)), this,
+        SLOT(slotJoystickEvent(std::uint8_t, std::uint8_t, std::int16_t)));
 }
 
 SlidingStackedWidget *MainWidget::createSlideWidget()
@@ -730,4 +740,43 @@ void MainWidget::slotUpdateSpeed()
     speedLabel->setText(QString(tr("Speed: ")) +
         (speed == -1 ? QString("-") :
         QString::number(speed / 100.0, 'f', 2)) + tr(" m/s"));
+}
+
+void MainWidget::slotJoystickEvent(std::uint8_t type, std::uint8_t num,
+    std::int16_t value)
+{
+    std::ostringstream oss;
+
+    switch (type)
+    {
+    case Joystick::JS_EVENT_TYPE_AXIS:
+        switch (num)
+        {
+        case Joystick::JS_EVENT_AXIS_X_WE:
+            if (!value)
+                oss << Cmd::CMD_DATA_CAR_MOVE_STOP;
+            else if (value > 0)
+                oss << Cmd::CMD_DATA_CAR_MOVE_TURN_RIGHT;
+            else
+                oss << Cmd::CMD_DATA_CAR_MOVE_TURN_LEFT;
+
+            executeCommand(Cmd::CMD_CAR_MOVE, oss.str());
+            break;
+        case Joystick::JS_EVENT_AXIS_X_NS:
+            if (!value)
+                oss << Cmd::CMD_DATA_CAR_MOVE_STOP;
+            else if (value > 0)
+                oss << Cmd::CMD_DATA_CAR_MOVE_RUN_REVERSE;
+            else
+                oss << Cmd::CMD_DATA_CAR_MOVE_RUN_DIRECT;
+
+            executeCommand(Cmd::CMD_CAR_MOVE, oss.str());
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
+    }
 }

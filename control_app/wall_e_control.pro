@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     ultrasonic_dist_sensor.cpp \
     battery_monitor.cpp \
     hall_speed_sensor.cpp \
-    headlights.cpp
+    headlights.cpp \
+    joystick.cpp
 
 HEADERS += gpio.h \
     motor_control.h \
@@ -42,7 +43,8 @@ HEADERS += gpio.h \
     ultrasonic_dist_sensor.h \
     battery_monitor.h \
     hall_speed_sensor.h \
-    headlights.h
+    headlights.h \
+    joystick.h
 
 config_at91 {
     DEFINES += CONFIG_GPIO CONFIG_ULTRASONIC_DIST_SENSOR \
