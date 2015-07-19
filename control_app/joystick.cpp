@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-/* Standard C++ API does not alow to read char device file in unblocking mode,
+/* Standard C++ API does not allow to read char device file in unblocking mode,
  * so used Linux API
  */
 
