@@ -24,6 +24,7 @@ class BatteryMonitor;
 class HallSpeedSensor;
 class Headlights;
 class Joystick;
+class Speaker;
 
 class MainWidget : public QWidget
 {
@@ -54,6 +55,7 @@ class MainWidget : public QWidget
     std::unique_ptr< Headlights > headlights;
     bool sendTurnMethod;
     Joystick *joystick;
+    Speaker *speaker;
 
     QGroupBox *motorTestCreate(int motor, const QString &groupText);
     QWidget *carTestCreate();
@@ -77,6 +79,7 @@ class MainWidget : public QWidget
     void setupSpeedSensor();
     void setupHeadlights();
     void setupJoystick();
+    void setupSpeaker();
     SlidingStackedWidget *createSlideWidget();
     QVBoxLayout *createNavigationButton(const char *imagePath, SlidingStackedWidget *sw,
         const char *slot);

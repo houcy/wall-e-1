@@ -13,6 +13,7 @@
 #include "hall_speed_sensor.h"
 #include "headlights.h"
 #include "joystick.h"
+#include "speaker.h"
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QGroupBox>
@@ -28,8 +29,9 @@
 
 #define SERVER_PORT 5000
 
-#define VIDEO_STREAM_PORT 5001
-#define AUDIO_STREAM_PORT 5002
+#define SERVER_VIDEO_STREAM_PORT 5001
+#define SERVER_AUDIO_STREAM_PORT 5002
+#define CLIENT_AUDIO_STREAM_PORT 5003
 
 #define CAR_START_DELAY 200
 
@@ -61,6 +63,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     setupSpeedSensor();
     setupHeadlights();
     setupJoystick();
+    setupSpeaker();
 
     setLayout(createMainLayout());
 
@@ -163,6 +166,11 @@ void MainWidget::setupJoystick()
     connect(joystick,
         SIGNAL(joystickEvent(std::uint8_t, std::uint8_t, std::int16_t)), this,
         SLOT(slotJoystickEvent(std::uint8_t, std::uint8_t, std::int16_t)));
+}
+
+void MainWidget::setupSpeaker()
+{
+    speaker = new Speaker(this);
 }
 
 SlidingStackedWidget *MainWidget::createSlideWidget()
@@ -634,12 +642,17 @@ void MainWidget::slotUpdateConnection()
         if (addr == QHostAddress::Null)
             critical("Client does not have valid IP address\n");
         else
-            mediaStream->start(addr, AUDIO_STREAM_PORT, VIDEO_STREAM_PORT);
+        {
+            mediaStream->start(addr, SERVER_AUDIO_STREAM_PORT,
+                SERVER_VIDEO_STREAM_PORT);
+            speaker->start(CLIENT_AUDIO_STREAM_PORT);
+        }
     }
     else
     {
         car->stop();
         horn->signalStop();
+        speaker->stop();
         mediaStream->stop();
         headlights->off();
     }

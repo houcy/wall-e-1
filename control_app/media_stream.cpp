@@ -5,15 +5,19 @@
 #define MEDIA_STREAM_PROGRAM "gst-launch"
 
 #ifdef CONFIG_AT91
-#define MEDIA_STREAM_PROGRAM_ARGS "v4l2src device=/dev/video1 ! videoscale !" \
+#define VIDEO_STREAM_OUT "v4l2src device=/dev/video1 ! videoscale ! " \
     "video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! jpegenc ! " \
-    "multipartmux ! udpsink host=%1 port=%2 osssrc device=/dev/dsp1 ! " \
-    "mulawenc ! rtppcmupay ! udpsink host=%3 port=%4"
+    "multipartmux ! udpsink host=%1 port=%2 "
+#define AUDIO_STREAM_OUT "osssrc device=/dev/dsp1 ! " \
+    "mulawenc ! rtppcmupay ! udpsink host=%3 port=%4 "
+#define MEDIA_STREAM_PROGRAM_ARGS VIDEO_STREAM_OUT AUDIO_STREAM_OUT
 #else
-#define MEDIA_STREAM_PROGRAM_ARGS "autovideosrc ! videoscale !" \
+#define VIDEO_STREAM_OUT "autovideosrc ! videoscale ! " \
     "video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! jpegenc ! " \
-    "multipartmux ! udpsink host=%1 port=%2 autoaudiosrc ! " \
-    "mulawenc ! rtppcmupay ! udpsink host=%3 port=%4"
+    "multipartmux ! udpsink host=%1 port=%2 "
+#define AUDIO_STREAM_OUT "autoaudiosrc ! mulawenc ! rtppcmupay ! udpsink " \
+    "host=%3 port=%4 "
+#define MEDIA_STREAM_PROGRAM_ARGS VIDEO_STREAM_OUT AUDIO_STREAM_OUT
 #endif
 
 MediaStream::MediaStream(QObject *parent) : QObject(parent)
