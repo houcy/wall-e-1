@@ -7,7 +7,9 @@
 #include "sliding_stacked_widget.h"
 #include "log.h"
 #include "media_stream.h"
+#ifdef CONFIG_HORN
 #include "horn.h"
+#endif
 #include "ultrasonic_dist_sensor.h"
 #include "battery_monitor.h"
 #include "hall_speed_sensor.h"
@@ -57,7 +59,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     setupServer();
     setupCar();
     setupMediaStream();
+#ifdef CONFIG_HORN
     setupHorn();
+#endif
     setupDistSensor();
     setupBatteryMonitor();
     setupSpeedSensor();
@@ -117,10 +121,12 @@ void MainWidget::setupMediaStream()
     mediaStream = new MediaStream(this);
 }
 
+#ifdef CONFIG_HORN
 void MainWidget::setupHorn()
 {
     horn = new Horn(this);
 }
+#endif
 
 void MainWidget::setupDistSensor()
 {
@@ -290,6 +296,7 @@ void MainWidget::executeCommand(int cmd, const std::string &cmdData)
         sendTurnMethod = true;
         break;
     case Cmd::CMD_HORN_SIGNAL:
+#ifdef CONFIG_HORN
         switch (data)
         {
         case Cmd::CMD_DATA_HORN_SIGNAL_START:
@@ -302,6 +309,7 @@ void MainWidget::executeCommand(int cmd, const std::string &cmdData)
             critical("Wrong horn signal action");
             return;
         }
+#endif
         break;
     case Cmd::CMD_HEADLIGHTS:
         switch (data)
@@ -651,7 +659,9 @@ void MainWidget::slotUpdateConnection()
     else
     {
         car->stop();
+#ifdef CONFIG_HORN
         horn->signalStop();
+#endif
         speaker->stop();
         mediaStream->stop();
         headlights->off();

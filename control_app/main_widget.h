@@ -41,7 +41,9 @@ class MainWidget : public QWidget
     QLabel *batteryChargeLabel;
     QLabel *speedLabel;
     MediaStream *mediaStream;
+#ifdef CONFIG_HORN
     Horn *horn;
+#endif
     std::unique_ptr< UltrasonicDistSensor > distSensor;
     QTimer *distSensorTimer;
     int distToObstacle;
@@ -73,7 +75,9 @@ class MainWidget : public QWidget
     void setupServer();
     void setupCar();
     void setupMediaStream();
+#ifdef CONFIG_HORN
     void setupHorn();
+#endif
     void setupDistSensor();
     void setupBatteryMonitor();
     void setupSpeedSensor();
