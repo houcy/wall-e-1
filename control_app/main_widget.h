@@ -57,7 +57,9 @@ class MainWidget : public QWidget
     std::unique_ptr< Headlights > headlights;
     bool sendTurnMethod;
     Joystick *joystick;
+#ifdef CONFIG_SPEAKER
     Speaker *speaker;
+#endif
 
     QGroupBox *motorTestCreate(int motor, const QString &groupText);
     QWidget *carTestCreate();
@@ -83,7 +85,9 @@ class MainWidget : public QWidget
     void setupSpeedSensor();
     void setupHeadlights();
     void setupJoystick();
+#ifdef CONFIG_SPEAKER
     void setupSpeaker();
+#endif
     SlidingStackedWidget *createSlideWidget();
     QVBoxLayout *createNavigationButton(const char *imagePath, SlidingStackedWidget *sw,
         const char *slot);

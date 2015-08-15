@@ -15,7 +15,9 @@
 #include "hall_speed_sensor.h"
 #include "headlights.h"
 #include "joystick.h"
+#ifdef CONFIG_SPEAKER
 #include "speaker.h"
+#endif
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QGroupBox>
@@ -67,7 +69,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
     setupSpeedSensor();
     setupHeadlights();
     setupJoystick();
+#ifdef CONFIG_SPEAKER
     setupSpeaker();
+#endif
 
     setLayout(createMainLayout());
 
@@ -174,10 +178,12 @@ void MainWidget::setupJoystick()
         SLOT(slotJoystickEvent(std::uint8_t, std::uint8_t, std::int16_t)));
 }
 
+#ifdef CONFIG_SPEAKER
 void MainWidget::setupSpeaker()
 {
     speaker = new Speaker(this);
 }
+#endif
 
 SlidingStackedWidget *MainWidget::createSlideWidget()
 {
@@ -653,7 +659,9 @@ void MainWidget::slotUpdateConnection()
         {
             mediaStream->start(addr, SERVER_AUDIO_STREAM_PORT,
                 SERVER_VIDEO_STREAM_PORT);
+#ifdef CONFIG_SPEAKER
             speaker->start(CLIENT_AUDIO_STREAM_PORT);
+#endif
         }
     }
     else
@@ -662,7 +670,9 @@ void MainWidget::slotUpdateConnection()
 #ifdef CONFIG_HORN
         horn->signalStop();
 #endif
+#ifdef CONFIG_SPEAKER
         speaker->stop();
+#endif
         mediaStream->stop();
         headlights->off();
     }
