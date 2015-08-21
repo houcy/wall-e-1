@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     battery_widget.cpp \
     speedmeter.cpp \
     distance_meter.cpp \
-    section.cpp
+    section.cpp \
+    speaker.cpp
 
 HEADERS += \
     player.h \
@@ -38,7 +39,8 @@ HEADERS += \
     battery_widget.h \
     speedmeter.h \
     distance_meter.h \
-    section.h
+    section.h \
+    speaker.h
 
 unix {
     LIBS += -lvlc

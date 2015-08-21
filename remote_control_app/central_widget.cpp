@@ -8,6 +8,9 @@
 #include "speedmeter.h"
 #include "distance_meter.h"
 #include "section.h"
+#ifdef CONFIG_SPEAKER
+#include "speaker.h"
+#endif
 #include <QGridLayout>
 #include <QPushButton>
 #include <QTimer>
@@ -28,6 +31,8 @@
 
 #define SERVER_NAME "192.168.3.1"
 #define SERVER_PORT 5000
+
+#define SPEAKER_PORT "5003"
 
 #define CMD_SEND_INTERVAL 100
 #define CMD_ACK_TIMEOUT 3000
@@ -74,6 +79,9 @@ CentralWidget::CentralWidget(QWidget *parent) :
     createAudioPlayer();
     createTcpClient();
     createCmd();
+#ifdef CONFIG_SPEAKER
+    createSpeaker();
+#endif
 
     setLayout(createLayout());
 
@@ -130,6 +138,13 @@ void CentralWidget::createCmd()
     connect(receiveCmdAckTimer, SIGNAL(timeout()), this,
         SLOT(slotClientCommunicationTimeout()));
 }
+
+#ifdef CONFIG_SPEAKER
+void CentralWidget::createSpeaker()
+{
+    speaker = new Speaker(this);
+}
+#endif
 
 QPushButton *CentralWidget::createConnectButton()
 {
@@ -653,6 +668,9 @@ void CentralWidget::slotClientConnected()
     receiveCmdAckTimer->start(CMD_ACK_TIMEOUT);
     videoPlayer->restart();
     videoPlayer->showVideoWidget(true);
+#ifdef CONFIG_SPEAKER
+    speaker->startStream(SERVER_NAME, SPEAKER_PORT);
+#endif
 
     reqRemoteSettings();
 }
@@ -672,6 +690,9 @@ void CentralWidget::slotClientDisconnected()
     connect(connectButton, SIGNAL(clicked()), this,
         SLOT(slotClientConnecting()));
 
+#ifdef CONFIG_SPEAKER
+    speaker->stopStream();
+#endif
     sendCmdTimer->stop();
     receiveCmdAckTimer->stop();
     videoPlayer->showVideoWidget(false);

@@ -21,6 +21,7 @@ class AnimatedButton;
 class BatteryWidget;
 class Speedmeter;
 class DistanceMeter;
+class Speaker;
 
 class CentralWidget : public QWidget
 {
@@ -56,6 +57,9 @@ class CentralWidget : public QWidget
     DistanceMeter *distMeter;
     QLabel *speedLabel;
     bool connError;
+#ifdef CONFIG_SPEAKER
+    Speaker *speaker;
+#endif
 #ifdef Q_OS_LINUX
     typedef struct
     {
@@ -86,6 +90,9 @@ class CentralWidget : public QWidget
     void createAudioPlayer();
     void createCmd();
     void createTcpClient();
+#ifdef CONFIG_SPEAKER
+    void createSpeaker();
+#endif
     QLabel *createConnectionStatusUi();
     QPushButton *createConnectButton();
     DistanceMeter *createDistanceToObstacleUi();
