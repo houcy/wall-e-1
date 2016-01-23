@@ -2,7 +2,7 @@
 #include "log.h"
 #include <fstream>
 
-#define HALL_SPEED_SENSOR_VALUE_PATH "/sys/class/hall_speed/value"
+#define HALL_SPEED_SENSOR_VALUE_PATH "/sys/class/halls/value"
 
 HallSpeedSensor::HallSpeedSensor()
 {
