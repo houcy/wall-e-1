@@ -8,7 +8,7 @@ Remote application:
 
 <img src="presentation/wall_e_remote_app.jpg">
 
-Below is reference car robot platform based on AT91SAM9G45-EKES board. The main features are web-camera with video and audio support, four motors, battery, battery sensor, ultrasonic sensor, hall sensor, WiFi AP, horn and headlights. The robot has its own touchscreen display for in place diagnostic and configuration. 
+Below is reference car robot platform based on AT91SAM9G45-EVK board. The main features are web-camera with video and audio support, four motors, battery, battery sensor, ultrasonic sensor, hall sensor, WiFi AP, horn and headlights. The robot has its own touchscreen display for in place diagnostic and configuration. 
  
 <img src="presentation/at91sam9g45_platform_robot_side.jpg" width="608">
 
@@ -53,7 +53,7 @@ $ sudo ifconfig eth0:0 192.168.3.1 up
 1. Execute Remote application and press "Connect" button.
 1. After connection is established connection status is "Connected", video from PC web-camera is shown and audio from PC microphone can be heard in headphones.  
 
-##AT91SAM9G45-EKES car robot platform
+##AT91SAM9G45-EVK car robot platform
 
 ### Root FS
 -  Download Buildroot 2013.05 or later from http://buildroot.uclibc.org.
@@ -65,10 +65,10 @@ $ sudo ifconfig eth0:0 192.168.3.1 up
    $ make  
 
 ### Kernel
--  Build Linux 2.6.30 with patches provided along with AT91SAM9G45-EKES boad and configuration file located in platform/at91sam9g45-ekes/linux-2.6.30/ folder. Refer to board's manual.
+-  Build Linux 2.6.30 with patches provided along with AT91SAM9G45-EVK boad and configuration file located in platform/at91sam9g45-ekes/linux-2.6.30/ folder. Refer to board's manual.
 
 ### Flashing board
--  Program board with default AT91SAM9G45-EKES bootloaders, custom kernel and root FS. Refer to board's manual.
+-  Program board with default AT91SAM9G45-EVK bootloaders, custom kernel and root FS. Refer to board's manual.
 
 ### Battery ADC
 -  Linux configuration file turns on support of PCF8591 8-bit ADC used for battery voltage measurements. In order to use this I2C device add its name and address to I2C devices table and recompile kernel:  
